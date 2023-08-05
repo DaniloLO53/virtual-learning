@@ -4,26 +4,31 @@ import { useState } from "react";
 import Button from "./Button"
 
 export const SignUpForm = () => {
-  console.log('Signup form rendered')
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [email, setEmail] = useState('');
+  const formIsValid = password.length > 0
+    && email.length > 0
+    && confirmPassword.length > 0
+    && validateEmail()
+    && validatePassword().isValid
+    && validateConfirmPassword();
 
   function validateEmail() {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    if (email.length > 0) return !emailRegex.test(email)
+    if (email.length > 0) return emailRegex.test(email);
 
-    return false;
+    return true;
   }
 
-  const validateConfirmPassword = () => {
+  function validateConfirmPassword() {
     if (confirmPassword.length === 0) return true;
 
     return confirmPassword === password;
   }
 
-  const validatePassword = () => {
+  function validatePassword() {
     if (password.length === 0) return (
       {
         message: '',
@@ -53,12 +58,12 @@ export const SignUpForm = () => {
     return ({
       message: (
         <span className='flex flex-col'>
-        {!isOver8 && <span>Must has over 8 characters</span>}
-        {!isLessThan16 && <span>Must has less than 16 characters</span>}
-        {!hasSpecialChar && <span>Must has a special character</span>}
-        {!hasDigit && <span>Must has at least one digit</span>}
-        {!hasLowercase && <span>Must at least one lowercase letter</span>}
-        {!hasUppercase && <span>Must at least one uppercase letter</span>}
+          {!isOver8 && <span>Must has over 8 characters</span>}
+          {!isLessThan16 && <span>Must has less than 16 characters</span>}
+          {!hasSpecialChar && <span>Must has a special character</span>}
+          {!hasDigit && <span>Must has at least one digit</span>}
+          {!hasLowercase && <span>Must at least one lowercase letter</span>}
+          {!hasUppercase && <span>Must at least one uppercase letter</span>}
       </span>
       ),
       isValid
@@ -68,9 +73,6 @@ export const SignUpForm = () => {
 
 
   function handleSubmit() {
-    console.log('Email: ', email);
-    console.log('Password: ', password);
-    console.log('ConfirmPassword: ', confirmPassword);
   }
   return (
     <div
@@ -92,9 +94,11 @@ export const SignUpForm = () => {
         label="Email"
         variant="outlined"
         value={email}
-        onChange={({ target }) => setEmail(target.value)}
-        error={validateEmail()}
-        helperText={validateEmail() && "Email format is invalid"}
+        onChange={({ target }) => {
+          setEmail(target.value);
+        }}
+        error={!validateEmail()}
+        helperText={!validateEmail() && "Email format is invalid"}
       />
       <TextField
         className="my-[12px]"
@@ -103,7 +107,9 @@ export const SignUpForm = () => {
         label="Password"
         variant="outlined"
         value={password}
-        onChange={({ target }) => setPassword(target.value)}
+        onChange={({ target }) => {
+          setPassword(target.value)
+        }}
         error={!validatePassword().isValid}
         helperText={!validatePassword().isValid && validatePassword().message}
       />
@@ -114,13 +120,17 @@ export const SignUpForm = () => {
         label="Confirm password"
         variant="outlined"
         value={confirmPassword}
-        onChange={({ target }) => setConfirmPassword(target.value)}
+        onChange={({ target }) => {
+          setConfirmPassword(target.value)
+        }}
         error={!validateConfirmPassword()}
         helperText={!validateConfirmPassword() && 'Passwords must match'}
       />
       <Button
         type="button"
         onClick={handleSubmit}
+        disabled={!formIsValid}
+        variant={!formIsValid ? 'transparent' : 'default'}
       >
         Sign-up
       </Button>

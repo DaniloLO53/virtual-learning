@@ -9,6 +9,7 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default: 'bg-purple-500 text-white font-medium',
+        transparent: 'bg-gray-500 opacity-30 text-white font-medium',
       },
       sizes: {
         default: 'w-full',
