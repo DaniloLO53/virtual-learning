@@ -1,3 +1,4 @@
+import { useUserContext } from "@/contexts/userContext";
 import { TextField } from "@mui/material"
 import Image from "next/image"
 import { useState } from "react";
@@ -7,6 +8,7 @@ export const SignUpForm = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [email, setEmail] = useState('');
+  const { signUpHandler } = useUserContext();
   const formIsValid = password.length > 0
     && email.length > 0
     && confirmPassword.length > 0
@@ -71,9 +73,6 @@ export const SignUpForm = () => {
       
   }
 
-
-  function handleSubmit() {
-  }
   return (
     <div
       className='bg-white opacity-80 pb-[36px] px-[24px] border-solid border-[1px] rounded-md
@@ -128,7 +127,7 @@ export const SignUpForm = () => {
       />
       <Button
         type="button"
-        onClick={handleSubmit}
+        onClick={() => signUpHandler({ email, password, confirmPassword })}
         disabled={!formIsValid}
         variant={!formIsValid ? 'transparent' : 'default'}
       >
