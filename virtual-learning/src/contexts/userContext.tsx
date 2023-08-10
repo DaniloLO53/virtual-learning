@@ -33,7 +33,7 @@ export function UserProvider({ children }: any): ReactElement {
       }
     }
     await axios.post(URL, signUpData, { ...config });
-    router.push('http://localhost:3001/sign-in')
+    router.push('/sign-in')
   }
 
   console.log('USER CONTEXT RENDERED')

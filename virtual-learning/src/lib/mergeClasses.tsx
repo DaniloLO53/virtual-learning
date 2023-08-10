@@ -1,5 +1,5 @@
-import { ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
+import { ClassValue, clsx } from 'clsx';
+import { twMerge } from 'tailwind-merge';
 
 // it resolves potential conflicts from clsx merge css styles
 export function cn(...input: ClassValue[]) {

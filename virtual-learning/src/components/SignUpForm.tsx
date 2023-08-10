@@ -1,14 +1,16 @@
-import { useUserContext } from "@/contexts/userContext";
-import { TextField } from "@mui/material"
-import Image from "next/image"
-import { useState } from "react";
-import Button from "./Button"
+import { useUserContext } from '@/contexts/userContext';
+import { TextField } from '@mui/material'
+import Image from 'next/image'
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import Button from './Button'
 
 export const SignUpForm = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [email, setEmail] = useState('');
   const { signUpHandler } = useUserContext();
+  const router = useRouter();
   const formIsValid = password.length > 0
     && email.length > 0
     && confirmPassword.length > 0
@@ -33,12 +35,12 @@ export const SignUpForm = () => {
   function validatePassword() {
     if (password.length === 0) return (
       {
-        message: '',
+        message: <span></span>,
         isValid: true,
       }
     );
       
-    const specialCharacterRegex = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/;
+    const specialCharacterRegex = /[!@#$%^&*()_+\-=[\]{};':'\\|,.<>/?]/;
     const digitRegex = /\d/;
     const lowercaseRegex = /[a-z]/;
     const uppercaseRegex = /[A-Z]/;
@@ -66,11 +68,10 @@ export const SignUpForm = () => {
           {!hasDigit && <span>Must has at least one digit</span>}
           {!hasLowercase && <span>Must at least one lowercase letter</span>}
           {!hasUppercase && <span>Must at least one uppercase letter</span>}
-      </span>
+        </span>
       ),
       isValid
     })
-      
   }
 
   return (
@@ -79,32 +80,32 @@ export const SignUpForm = () => {
       border-slater-200 flex flex-col itens-center'
     >
       <Image
-        src="/logo.svg"
-        alt="Vercel Logo"
-        className="m-[45px]"
+        src='/logo.svg'
+        alt='Vercel Logo'
+        className='m-[45px]'
         width={350}
         height={100}
         priority
       />
       <TextField
-        className="my-[12px]"
-        id="outlined-basic"
+        className='my-[12px]'
+        id='outlined-basic'
         required
-        label="Email"
-        variant="outlined"
+        label='Email'
+        variant='outlined'
         value={email}
         onChange={({ target }) => {
           setEmail(target.value);
         }}
         error={!validateEmail()}
-        helperText={!validateEmail() && "Email format is invalid"}
+        helperText={!validateEmail() && 'Email format is invalid'}
       />
       <TextField
-        className="my-[12px]"
-        id="outlined-basic"
+        className='my-[12px]'
+        id='outlined-basic'
         required
-        label="Password"
-        variant="outlined"
+        label='Password'
+        variant='outlined'
         value={password}
         onChange={({ target }) => {
           setPassword(target.value)
@@ -113,11 +114,11 @@ export const SignUpForm = () => {
         helperText={!validatePassword().isValid && validatePassword().message}
       />
       <TextField
-        className="my-[12px]"
-        id="outlined-basic"
+        className='my-[12px]'
+        id='outlined-basic'
         required
-        label="Confirm password"
-        variant="outlined"
+        label='Confirm password'
+        variant='outlined'
         value={confirmPassword}
         onChange={({ target }) => {
           setConfirmPassword(target.value)
@@ -126,7 +127,15 @@ export const SignUpForm = () => {
         helperText={!validateConfirmPassword() && 'Passwords must match'}
       />
       <Button
-        type="button"
+        type='button'
+        className='text-blue-500 mb-[7px] hover:font-bold'
+        variant='text'
+        onClick={() => router.push('/sign-in')}
+      >
+        Already registered? Login here!
+      </Button>
+      <Button
+        type='button'
         onClick={() => signUpHandler({ email, password, confirmPassword })}
         disabled={!formIsValid}
         variant={!formIsValid ? 'transparent' : 'default'}
