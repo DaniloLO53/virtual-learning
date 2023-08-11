@@ -1,5 +1,5 @@
 import { useUserContext } from '@/contexts/userContext';
-import { TextField } from '@mui/material'
+import { FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -8,9 +8,10 @@ import Button from './Button'
 export const SignInForm = () => {
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
-  const { signUpHandler } = useUserContext();
+  const [role, setRole] = useState('student');
+  const { signInHandler } = useUserContext();
   const router = useRouter();
-  const formIsValid = password.length > 0 && email.length > 0
+  const formIsValid = password.length > 0 && email.length > 0;
 
   return (
     <div
@@ -32,9 +33,7 @@ export const SignInForm = () => {
         label='Email'
         variant='outlined'
         value={email}
-        onChange={({ target }) => {
-          setEmail(target.value);
-        }}
+        onChange={({ target }) => setEmail(target.value)}
       />
       <TextField
         className='my-[12px]'
@@ -43,9 +42,7 @@ export const SignInForm = () => {
         label='Password'
         variant='outlined'
         value={password}
-        onChange={({ target }) => {
-          setPassword(target.value)
-        }}
+        onChange={({ target }) => setPassword(target.value)}
       />
       <Button
         type='button'
@@ -55,14 +52,29 @@ export const SignInForm = () => {
       >
         Not registered yet? Sign-up here!
       </Button>
-      <Button
+      <div>
+        <FormControl fullWidth className='mb-[20px]'>
+          <InputLabel id='role-label'>Sign in as</InputLabel>
+          <Select
+            labelId='role-label'
+            id='role'
+            value={role}
+            label='Sign up as'
+            onChange={({ target }) => setRole(target.value)}
+          >
+            <MenuItem value={'student'}>Student</MenuItem>
+            <MenuItem value={'teacher'}>Teacher</MenuItem>
+          </Select>
+        </FormControl>
+        <Button
         type='button'
-        onClick={() => signUpHandler({ email, password })}
+        onClick={() => signInHandler({ email, password }, role)}
         disabled={!formIsValid}
         variant={!formIsValid ? 'transparent' : 'default'}
       >
         Sign-in
       </Button>
+      </div>
     </div>
   )
 }

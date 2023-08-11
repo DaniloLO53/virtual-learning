@@ -1,5 +1,5 @@
 import { useUserContext } from '@/contexts/userContext';
-import { TextField } from '@mui/material'
+import { FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -9,6 +9,7 @@ export const SignUpForm = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [email, setEmail] = useState('');
+  const [role, setRole] = useState('student');
   const { signUpHandler } = useUserContext();
   const router = useRouter();
   const formIsValid = password.length > 0
@@ -134,14 +135,29 @@ export const SignUpForm = () => {
       >
         Already registered? Login here!
       </Button>
-      <Button
-        type='button'
-        onClick={() => signUpHandler({ email, password, confirmPassword })}
-        disabled={!formIsValid}
-        variant={!formIsValid ? 'transparent' : 'default'}
-      >
-        Sign-up
-      </Button>
+      <div>
+        <FormControl fullWidth className='mb-[20px]'>
+          <InputLabel id='role-label'>Sign up as</InputLabel>
+          <Select
+            labelId='role-label'
+            id='role'
+            value={role}
+            label='Sign in as'
+            onChange={({ target }) => setRole(target.value)}
+          >
+            <MenuItem value={'student'}>Student</MenuItem>
+            <MenuItem value={'teacher'}>Teacher</MenuItem>
+          </Select>
+        </FormControl>
+        <Button
+          type='button'
+          onClick={() => signUpHandler({ email, password, confirmPassword }, role)}
+          disabled={!formIsValid}
+          variant={!formIsValid ? 'transparent' : 'default'}
+        >
+          Sign-up
+        </Button>
+      </div>
     </div>
   )
 }

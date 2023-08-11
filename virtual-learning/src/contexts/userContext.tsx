@@ -1,6 +1,6 @@
 "use client"
 
-import { SignUpData, UserData } from '@/interfaces/user/UserData';
+import { SignUpData, SignInData, UserData } from '@/interfaces/user/UserData';
 import { createContext, ReactElement, useContext, useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
@@ -9,6 +9,7 @@ interface UserContext {
   userData: UserData;
   setUserData: any;
   signUpHandler: any;
+  signInHandler: any;
 }
 
 const UserContext = createContext<UserContext | null>(null);
@@ -25,15 +26,28 @@ export function UserProvider({ children }: any): ReactElement {
   const [userData, setUserData] = useState<any>(null);
   const router = useRouter();
 
-  async function signUpHandler(signUpData: SignUpData) {
+  async function signUpHandler(signUpData: SignUpData, role: 'student' | 'teacher') {
     const URL = (process.env.NEXT_PUBLIC_SERVER_ENDPOINT as string) + '/sign-up';
     const config = {
       headers: {
-        role: 'student'
+        role: role
       }
     }
     await axios.post(URL, signUpData, { ...config });
     router.push('/sign-in')
+  }
+
+  async function signInHandler(signInData: SignInData, role: 'student' | 'teacher') {
+    console.log('oi')
+    const URL = (process.env.NEXT_PUBLIC_SERVER_ENDPOINT as string) + '/auth/sign-in';
+    const config = {
+      headers: {
+        role: role
+      }
+    }
+    const response = await axios.post(URL, signInData, { ...config });
+    console.log('Response', response)
+    router.push('/home')
   }
 
   console.log('USER CONTEXT RENDERED')
@@ -42,7 +56,8 @@ export function UserProvider({ children }: any): ReactElement {
     <UserContext.Provider value={{
       setUserData,
       userData,
-      signUpHandler
+      signUpHandler,
+      signInHandler
     }}>
       {children}
     </UserContext.Provider>
