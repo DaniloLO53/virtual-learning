@@ -38,15 +38,14 @@ export function UserProvider({ children }: any): ReactElement {
   }
 
   async function signInHandler(signInData: SignInData, role: 'student' | 'teacher') {
-    console.log('oi')
     const URL = (process.env.NEXT_PUBLIC_SERVER_ENDPOINT as string) + '/auth/sign-in';
     const config = {
       headers: {
         role: role
       }
     }
-    const response = await axios.post(URL, signInData, { ...config });
-    console.log('Response', response)
+    const { data } = await axios.post(URL, signInData, { ...config });
+    setUserData({ access_token: data.access_token });
     router.push('/home')
   }
 
