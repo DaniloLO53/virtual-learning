@@ -2,6 +2,7 @@
 
 import Button from '@/components/Button';
 import { TopBar } from '@/components/TopBar';
+import { UserCourses } from '@/components/UserCourses';
 import { useUserContext } from '@/contexts/userContext';
 import axios from 'axios';
 import React from 'react';
@@ -13,14 +14,12 @@ export default function Home() {
 
   
   return (
-    <div className=''>
+    <div>
       <TopBar
       />
-      {/* <Button
-        onClick={loadHome}
-      >
-        Load
-      </Button> */}
+      <UserCourses
+        courses={ userData.courses }
+      />
     </div>
   )
 }
