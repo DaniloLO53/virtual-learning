@@ -1,10 +1,13 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import MenuIcon from '@mui/icons-material/Menu';
+import SearchBar from './SearchBar';
+import SearchedCourses from './SearchedCourses';
 
 export default function TemporaryDrawer() {
   const [state, setState] = React.useState(false);
+  const [value, setValue] = React.useState('');
+  const [courses, setCourses] = React.useState([]);
 
   const toggleDrawer =
     (open: boolean) =>
@@ -17,19 +20,10 @@ export default function TemporaryDrawer() {
         return;
       }
 
+      setCourses([]);
       setState(open);
+      setValue('');
     };
-
-  const list = () => (
-    <Box
-      sx={{ width: 250 }}
-      role="presentation"
-      onClick={toggleDrawer(false)}
-      onKeyDown={toggleDrawer(false)}
-    >
-      oi
-    </Box>
-  );
 
   return (
     <div>
@@ -46,7 +40,15 @@ export default function TemporaryDrawer() {
         open={state}
         onClose={toggleDrawer(false)}
       >
-        {list()}
+        <SearchBar setCourses={setCourses} value={value} setValue={setValue} />
+        {
+          courses.length > 0 && value.length > 0 && <SearchedCourses courses={courses} />
+        }
+        {
+          courses.length === 0
+          && value.length !== 0
+          && <p className='px-[8px]'>No results</p>
+        }
       </Drawer>
     </div>
   );

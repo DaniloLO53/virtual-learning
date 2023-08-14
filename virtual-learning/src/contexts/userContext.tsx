@@ -75,8 +75,6 @@ export function UserProvider({ children }: any): ReactElement {
     router.push('/home')
   }
 
-  console.log('USER CONTEXT RENDERED')
-
   return (
     <UserContext.Provider value={{
       setUserData,

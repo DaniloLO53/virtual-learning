@@ -3,9 +3,8 @@ import CheckIcon from '@mui/icons-material/Check';
 import ClearIcon from '@mui/icons-material/Clear';
 
 export const CourseCard = ({course}: any) => {
-  const { title, teacher, id } = course;
+  const { title, teacher } = course;
 
-  console.log(course.activities);
   function formatDate(date: string): string {
     const dateObj = new Date(date);
     const day = String(dateObj.getUTCDate()).padStart(2, '0');

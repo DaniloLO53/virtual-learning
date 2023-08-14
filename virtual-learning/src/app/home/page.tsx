@@ -10,11 +10,8 @@ import React from 'react';
 export default function Home() {
   const { userData } = useUserContext();
 
-  console.log('userData:', userData)
-
-  
   return (
-    <div>
+    <div className='flex justify-center'>
       <TopBar
       />
       <UserCourses
