@@ -1,7 +1,7 @@
 import AppBar from '@mui/material/AppBar';
 import MenuIcon from '@mui/icons-material/Menu';
 
-export const TopBar = () => {
+export const SideBar = () => {
   return (
     <AppBar
       className='h-[50px] flex justify-center'
