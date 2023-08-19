@@ -1,7 +1,7 @@
 import * as React from 'react';
 import SearchedCourse from './SearchedCourse';
 
-export default function SearchedCourses({ courses }: any) {
+export default function SearchedCourses({ courses, setState }: any) {
 
   return (
     <ul
@@ -12,6 +12,7 @@ export default function SearchedCourses({ courses }: any) {
           <SearchedCourse
             key={course.code + index}
             course={course}
+            setState={setState}
           />
         ))
        : <li>No results</li>}

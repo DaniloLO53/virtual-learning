@@ -1,6 +1,7 @@
 export interface UserData {
+  id: number;
   email: string;
-  access_token: string;
+  access_token: string | null;
   courses: any[]
 }
 

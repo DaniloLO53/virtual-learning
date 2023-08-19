@@ -1,24 +1,31 @@
 import AppBar from '@mui/material/AppBar';
-import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
+import * as React from 'react';
 
-type CurrentPage = 'board' | 'chat' | 'activities' | 'participants' | 'groups';
+type CurrentTab = 'board' | 'chat' | 'activities' | 'participants' | 'groups';
 
-export const CourseTopBar = () => {
-  const [currentPage, setCurrentPage] = useState<CurrentPage>('board');
+export const CourseTopBar = ({ courseId }: { courseId: string }) => {
+  const router = useRouter();
+  const pathName = usePathname();
+  const anchor = pathName.split('/')[pathName.split('/').length - 1];
+  const [currentTab, setCurrentTab] = React.useState<CurrentTab>(anchor as CurrentTab);
 
   function handleClick(event: any) {
     const { target } = event;
 
-    setCurrentPage(target.name);
+    setCurrentTab(target.name);
+    router.replace(`/main/courses/${courseId}/${target.name}`);
   }
 
   return (
     <AppBar
-      className='h-[50px] flex justify-center px-[10px] top-[50px] border-b-[1px] border-b-slate-300 px-[35px]'
+      className='h-[50px] flex justify-center px-[10px] mt-[50px] border-b-[1px] border-b-slate-300 px-[35px]'
       color='transparent'
       position='fixed'
       sx={{
-        boxShadow: 'none'
+        boxShadow: 'none',
+        backgroundColor: 'white',
       }}
     >
       <ul
@@ -26,7 +33,7 @@ export const CourseTopBar = () => {
       >
         <li className='h-full relative'>
           <button
-            className={`${currentPage === 'board' && 'bg-purple-100/60 after:content-[""] after:w-[100%] after:absolute after:bottom-[0px] after:left-[0px] after:h-[4px] after:bg-gray-400 after:rounded-t-[7px]'} h-full px-[15px]`}
+            className={`${currentTab === 'board' && 'text-purple-600 bg-purple-100/60 after:content-[""] after:w-[100%] after:absolute after:bottom-[0px] after:left-[0px] after:h-[4px] after:bg-gray-400 after:rounded-t-[7px]'} h-full px-[15px]`}
             type='button'
             name='board'
             onClick={handleClick}
@@ -36,7 +43,7 @@ export const CourseTopBar = () => {
         </li>
         <li className='h-full relative'>
           <button
-            className={`${currentPage === 'activities' && 'bg-purple-100/60 after:content-[""] after:w-[100%] after:absolute after:bottom-[0px] after:left-[0px] after:h-[4px] after:bg-gray-400 after:rounded-t-[7px]'} h-full px-[15px]`}
+            className={`${currentTab === 'activities' && 'text-purple-600 bg-purple-100/60 after:content-[""] after:w-[100%] after:absolute after:bottom-[0px] after:left-[0px] after:h-[4px] after:bg-gray-400 after:rounded-t-[7px]'} h-full px-[15px]`}
             type='button'
             name='activities'
             onClick={handleClick}
@@ -46,7 +53,7 @@ export const CourseTopBar = () => {
         </li>
         <li className='h-full relative'>
           <button
-            className={`${currentPage === 'participants' && 'bg-purple-100/60 after:content-[""] after:w-[100%] after:absolute after:bottom-[0px] after:left-[0px] after:h-[4px] after:bg-gray-400 after:rounded-t-[7px]'} h-full px-[15px]`}
+            className={`${currentTab === 'participants' && 'text-purple-600 bg-purple-100/60 after:content-[""] after:w-[100%] after:absolute after:bottom-[0px] after:left-[0px] after:h-[4px] after:bg-gray-400 after:rounded-t-[7px]'} h-full px-[15px]`}
             type='button'
             name='participants'
             onClick={handleClick}
@@ -56,7 +63,7 @@ export const CourseTopBar = () => {
         </li>
         <li className='h-full relative'>
           <button
-            className={`${currentPage === 'chat' && 'bg-purple-100/60 after:content-[""] after:w-[100%] after:absolute after:bottom-[0px] after:left-[0px] after:h-[4px] after:bg-gray-400 after:rounded-t-[7px]'} h-full px-[15px]`}
+            className={`${currentTab === 'chat' && 'text-purple-600 bg-purple-100/60 after:content-[""] after:w-[100%] after:absolute after:bottom-[0px] after:left-[0px] after:h-[4px] after:bg-gray-400 after:rounded-t-[7px]'} h-full px-[15px]`}
             type='button'
             name='chat'
             onClick={handleClick}
@@ -66,7 +73,7 @@ export const CourseTopBar = () => {
         </li>
         <li className='h-full relative'>
           <button
-            className={`${currentPage === 'groups' && 'bg-purple-100/60 after:content-[""] after:w-[100%] after:absolute after:bottom-[0px] after:left-[0px] after:h-[4px] after:bg-gray-400 after:rounded-t-[7px]'} h-full px-[15px]`}
+            className={`${currentTab === 'groups' && 'text-purple-600 bg-purple-100/60 after:content-[""] after:w-[100%] after:absolute after:bottom-[0px] after:left-[0px] after:h-[4px] after:bg-gray-400 after:rounded-t-[7px]'} h-full px-[15px]`}
             type='button'
             name='groups'
             onClick={handleClick}

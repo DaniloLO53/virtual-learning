@@ -131,7 +131,7 @@ export const SignUpForm = () => {
         type='button'
         className='text-blue-500 mb-[7px] hover:font-bold'
         variant='text'
-        onClick={() => router.push('/sign-in')}
+        onClick={() => router.push('/auth/sign-in')}
       >
         Already registered? Login here!
       </Button>

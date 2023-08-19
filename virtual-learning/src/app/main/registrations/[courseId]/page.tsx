@@ -59,7 +59,7 @@ export default function RegistrateToCourse(
     try {
       const { data } = await axios.post(URL, payload, { ...config });
       console.log('Data:', data)
-      router.push(`/courses/${courseId}`);
+      router.replace(`main/courses/${courseId}/board`);
     } catch (error) {
       console.log('Error', error)
     }
@@ -75,7 +75,7 @@ export default function RegistrateToCourse(
       <div className='w-full min-h-[calc(100vh-55px)] mt-[55px] flex justify-center'>
         <div className='w-[50%] flex justify-end'>
           <div className='w-[70%]  flex flex-col justify-start px-[30px] py-[80px]'>
-            <h2 className='text-[28px] font-extrabold  pt-[50px] pb-[50px]'>{ course?.title }</h2>
+            <h2 className='text-[28px] font-extrabold  pt-[40px] pb-[50px]'>{ course?.title }</h2>
             <p className=' block'>Teacher:&nbsp; &nbsp;{ course?.teacher.email }</p>
             <p className=' block'>Code:&nbsp; &nbsp;{ course?.code }</p>
             <p className='py-[16px]'>
@@ -84,19 +84,19 @@ export default function RegistrateToCourse(
           </div>
         </div>
         <div className='w-[50%] flex justify-start'>
-          <div className='w-[70%]  flex flex-col justify-start px-[30px] py-[80px]'>
-            { course?.password && <input
+          <div className='w-[70%]  flex flex-col justify-start px-[30px] py-[120px]'>
+            { course?.password && course?.registrations.length === 0 && <input
               className='p-[10px] mb-[20px] rounded-[8px] border-solid border-slate-400 border-[1px]'
               type='text'
               placeholder='Enter with password'
               value={password!}
               onChange={({ target }) => setPassword(target.value)}
             />}
-            <Button
+            {course?.registrations.length === 0 ? <Button
               onClick={registerToCourse}
             >
               Register
-            </Button>
+            </Button> : <p>You&apos;re already registered to this course</p>}
           </div>
         </div>
       </div>

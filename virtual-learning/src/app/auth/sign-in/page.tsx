@@ -3,7 +3,7 @@
 import { SignInForm } from '@/components/SignInForm';
 import React from 'react';
 
-export default function SignUp() {
+export default function SignIn() {
   
   return (
     <div className='w-full h-screen bg-[url("/sign_wallpaper.jpg")]'>

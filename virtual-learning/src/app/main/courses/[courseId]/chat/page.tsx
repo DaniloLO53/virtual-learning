@@ -1,23 +1,14 @@
 "use client"
 
-import { CourseTopBar } from '@/components/CourseTopBar';
-import { TopBar } from '@/components/TopBar';
 import axios from 'axios';
 import * as React from 'react';
 
-export interface CourseParams {
-  params: {
-    courseId: string;
-  }
-}
-
-export default function Course({ params }: CourseParams) {
-  const [courseInfos, setCourseInfos] = React.useState(null);
-
+export default function Chat({ params }: any) {
   async function loadCourse() {
     const { courseId } = params;
+    console.log('courseId from chat', courseId)
     const TOKEN = JSON.parse(localStorage.getItem('access_token') || '');
-    const URL = (process.env.NEXT_PUBLIC_SERVER_ENDPOINT as string) + '/registrations';
+    const URL = (process.env.NEXT_PUBLIC_SERVER_ENDPOINT as string) + `/courses/${courseId}/registration`;
     const config = {
       headers: {
         role: 'student',
@@ -26,6 +17,7 @@ export default function Course({ params }: CourseParams) {
     }
     try {
       // const { data } = await axios.get(URL, { ...config });
+      // setCourseInfos(data);
       // console.log('Data:', data)
     } catch (error) {
       console.log('Error', error)
@@ -37,8 +29,7 @@ export default function Course({ params }: CourseParams) {
   }, [])
   return (
     <div>
-      <TopBar />
-      <CourseTopBar />
+      oi
     </div>
   )
 }

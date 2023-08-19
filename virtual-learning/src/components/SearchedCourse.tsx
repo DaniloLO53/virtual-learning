@@ -1,12 +1,13 @@
 import { useRouter } from 'next/navigation';
 import * as React from 'react';
 
-export default function SearchedCourse({ course }: any) {
+export default function SearchedCourse({ course, setState }: any) {
   const { title, code, teacher, id } = course;
   const router = useRouter();
 
   function handleClick() {
-    router.push(`registrations/${id}`);
+    setState(false);
+    router.replace(`/main/registrations/${id}`);
   }
 
   return (
