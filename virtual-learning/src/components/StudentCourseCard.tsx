@@ -19,7 +19,7 @@ export const StudentCourseCard = ({ course }: any) => {
   return (
     <button
       type='button'
-      onClick={() => router.replace(`/main/courses/${id}/board`)}
+      onClick={() => router.replace(`/courses/${id}/board`)}
     >
       <div
         className='w-[350px] h-[280px] border-slate-300 border-[1px] rounded-t-[35px] rounded-b-[10px] relative'

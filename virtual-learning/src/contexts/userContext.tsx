@@ -33,14 +33,14 @@ export function UserProvider({ children }: any): ReactElement {
   const router = useRouter();
 
   async function signUpHandler(signUpData: SignUpData, role: 'student' | 'teacher') {
-    const URL = (process.env.NEXT_PUBLIC_SERVER_ENDPOINT as string) + '/sign-up';
+    const URL = (process.env.NEXT_PUBLIC_SERVER_ENDPOINT as string) + '/auth/sign-up';
     const config = {
       headers: {
         role: role
       }
     }
     await axios.post(URL, signUpData, { ...config });
-    router.push('/auth/sign-in')
+    router.push('/sign-in')
   }
 
   async function signInHandler(signInData: SignInData, role: 'student' | 'teacher') {
@@ -55,7 +55,7 @@ export function UserProvider({ children }: any): ReactElement {
     localStorage.setItem('access_token', JSON.stringify(data.access_token));
     localStorage.setItem('role', JSON.stringify(data.role));
     setUserData({ ...userData, access_token: data.access_token });
-    router.push(`/main/home/${role}`)
+    router.push('/home')
   }
 
   async function signOutHandler() {
@@ -63,7 +63,7 @@ export function UserProvider({ children }: any): ReactElement {
       localStorage.removeItem('access_token');
       setUserData({ ...userData, access_token: null });
     }
-    router.replace('/auth/sign-in');
+    router.replace('/sign-in');
   }
 
   return (

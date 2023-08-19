@@ -8,7 +8,7 @@ export const TeacherCourseCard = ({ course }: any) => {
   const router = useRouter();
 
   function handleGoToCourse() {
-    router.replace(`/main/courses/${id}/board`);
+    router.replace(`/courses/${id}/board`);
   }
 
   return (

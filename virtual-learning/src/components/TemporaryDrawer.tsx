@@ -33,7 +33,7 @@ export default function TemporaryDrawer() {
 
   function backToHome() {
     const role = JSON.parse(localStorage.getItem('role') || '');
-    router.replace(`/main/home/${role}`);
+    router.replace('/home/');
   }
 
   return (

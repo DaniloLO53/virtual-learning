@@ -7,7 +7,7 @@ export default function SearchedCourse({ course, setState }: any) {
 
   function handleClick() {
     setState(false);
-    router.replace(`/main/registrations/${id}`);
+    router.replace(`/registrations/${id}`);
   }
 
   return (

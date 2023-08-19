@@ -15,7 +15,7 @@ export const CourseTopBar = ({ courseId }: { courseId: string }) => {
     const { target } = event;
 
     setCurrentTab(target.name);
-    router.replace(`/main/courses/${courseId}/${target.name}`);
+    router.replace(`/courses/${courseId}/${target.name}`);
   }
 
   return (

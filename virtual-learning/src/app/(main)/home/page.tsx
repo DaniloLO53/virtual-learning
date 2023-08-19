@@ -9,16 +9,17 @@ import React, { useEffect } from 'react';
 
 export default function Home() {
   const { userData, setUserData } = useUserContext();
+  const role = JSON.parse(localStorage.getItem('role') || '');
 
   useEffect(() => {
     const TOKEN_KEY = localStorage.getItem('access_token');
     let TOKEN: string = TOKEN_KEY ? JSON.parse(TOKEN_KEY) : '';
       
     async function loadUserCourses() {
-      const URL = (process.env.NEXT_PUBLIC_SERVER_ENDPOINT as string) + '/courses/registered';
+      const URL = (process.env.NEXT_PUBLIC_SERVER_ENDPOINT as string) + `/courses/${role === 'student' ? 'registered' : 'created'}`;
       const config = {
         headers: {
-          role: 'student',
+          role,
           authorization: 'Bearer ' + TOKEN
         },
       }

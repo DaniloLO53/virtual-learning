@@ -27,7 +27,7 @@ export default function Activities({ params }: any) {
     // loadCourse();
   }, [])
   return (
-    <div>
+    <div className='mt-[150px] w-full flex flex-col items-center'>
       oi
     </div>
   )
