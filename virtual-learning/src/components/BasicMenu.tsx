@@ -26,8 +26,7 @@ export default function BasicMenu({ children, registrationId, participants, setP
     }
     try {
       const { data } = await axios.delete(URL, { ...config });
-      const newParticipants = participants.students.filter(({ id }: any) => id === data.id);
-      setParticipants(newParticipants);
+      setParticipants(data);
       console.log('Data:', data)
     } catch (error) {
       console.log('Error', error)

@@ -24,16 +24,16 @@ interface Participants {
 export default function Participants({ params }: any) {
   const role = JSON.parse(localStorage.getItem('role') || '');
   const [participants, setParticipants] = React.useState<Participants | null>(null);
-  const studentsNumber = participants?.students?.length;
+  const studentsNumber = participants?.students?.length ?? 0;
 
-  async function loadCourse() {
+  async function loadParticipants() {
     const { courseId } = params;
     const TOKEN = JSON.parse(localStorage.getItem('access_token') || '');
     const URL = (process.env.NEXT_PUBLIC_SERVER_ENDPOINT as string)
-      + `/courses/${courseId}/participants`;
+      + `/registrations/courses/${courseId}`;
     const config = {
       headers: {
-        role: 'student',
+        role,
         authorization: 'Bearer ' + TOKEN
       },
     }
@@ -49,7 +49,7 @@ export default function Participants({ params }: any) {
   }
 
   React.useEffect(() => {
-    loadCourse();
+    loadParticipants();
   }, [])
   return (
     <div className='mt-[150px] w-full flex flex-col items-center'>
@@ -83,7 +83,7 @@ export default function Participants({ params }: any) {
           <span className='text-purple-600 font-semibold'>
             { studentsNumber }
             &nbsp;
-            { studentsNumber === 1 ? 'student' : 'students' }
+            { (studentsNumber === 1 || studentsNumber === 0) ? 'student' : 'students' }
           </span>
         </div>
         <ul
@@ -91,7 +91,7 @@ export default function Participants({ params }: any) {
           role='list'
         >
           {
-            participants?.students.map(({ student, id }: Student, index: number) => (
+            participants?.students?.map(({ student, id }: Student, index: number) => (
               <li
                 key={index + student.email}
                 className='w-full py-[10px] px-[20px] flex items-center justify-between'

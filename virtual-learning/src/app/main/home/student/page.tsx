@@ -15,7 +15,7 @@ export default function Home() {
     let TOKEN: string = TOKEN_KEY ? JSON.parse(TOKEN_KEY) : '';
       
     async function loadUserCourses() {
-      const URL = (process.env.NEXT_PUBLIC_SERVER_ENDPOINT as string) + '/courses';
+      const URL = (process.env.NEXT_PUBLIC_SERVER_ENDPOINT as string) + '/courses/registered';
       const config = {
         headers: {
           role: 'student',

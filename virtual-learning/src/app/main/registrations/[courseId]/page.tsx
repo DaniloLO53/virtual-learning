@@ -59,7 +59,7 @@ export default function RegistrateToCourse(
     try {
       const { data } = await axios.post(URL, payload, { ...config });
       console.log('Data:', data)
-      router.replace(`main/courses/${courseId}/board`);
+      router.replace(`/main/courses/${courseId}/board`);
     } catch (error) {
       console.log('Error', error)
     }
