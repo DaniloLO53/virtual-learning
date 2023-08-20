@@ -32,7 +32,7 @@ function ArticleSummaryLink({ id, title, updated_at, courseId }: any) {
       key={id}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      href={`/courses/${courseId}/board/articles/${id}`}
+      href={`/courses/${courseId}/articles/${id}`}
     >
       <span className=''>
         { title }

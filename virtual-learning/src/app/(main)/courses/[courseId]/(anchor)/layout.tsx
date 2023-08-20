@@ -13,14 +13,10 @@ interface CourseLayoutProps {
 
 export default function CourseLayout(
 { children, params }: CourseLayoutProps) {
-  const pathName = usePathname();
 
   return (
     <div>
-      {
-        !pathName.includes('articles')
-        && <CourseTopBar courseId={ params.courseId } />
-      }
+      <CourseTopBar courseId={ params.courseId } />
       { children }
     </div>
   )

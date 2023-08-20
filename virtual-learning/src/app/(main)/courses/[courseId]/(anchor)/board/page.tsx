@@ -2,7 +2,10 @@
 
 import ArticleSummaryLink from '@/components/ArticleSummaryLink';
 import axios from 'axios';
+import Link from 'next/link';
 import * as React from 'react';
+import AddIcon from '@mui/icons-material/Add';
+import SimpleDialog from '@/components/SimpleDialog';
 
 interface BoardParams {
   params: {
@@ -126,8 +129,39 @@ const dumbArticles = [
 ]
 
 export default function Board({ params }: BoardParams) {
+  const role = JSON.parse(localStorage.getItem('role') || '');
   const [articles, setArticles] = React.useState<ArticleSummary[]>(dumbArticles);
-  const summaryElement = React.useRef(null);
+  const [open, setOpen] = React.useState(false);
+  const [title, setTitle] = React.useState('');
+  const [description, setDescription] = React.useState('');
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    handlePublishArticle();
+  };
+
+  async function handlePublishArticle() {
+    const TOKEN = JSON.parse(localStorage.getItem('access_token') || '');
+    const role = JSON.parse(localStorage.getItem('role') || '');
+    const URL = (process.env.NEXT_PUBLIC_SERVER_ENDPOINT as string) + '/articles';
+    const config = {
+      headers: {
+        role,
+        authorization: 'Bearer ' + TOKEN
+      },
+    }
+    let payload: any = { title, description, course_id: Number(params.courseId) };
+    try {
+      const { data } = await axios.post(URL, payload, { ...config });
+      console.log('Data:', data)
+    } catch (error) {
+      console.log('Error', error)
+    }
+  }
 
   async function loadCourse() {
     const { courseId } = params;
@@ -154,6 +188,25 @@ export default function Board({ params }: BoardParams) {
   }, [])
   return (
     <div className='mt-[150px] w-full flex flex-col items-center'>
+      <div className='w-[60%]'>
+        { role === 'teacher' &&
+        <button
+          className='p-[10px] text-purple-500 font-bold flex items-center'
+          type='button'
+          onClick={handleClickOpen}
+        >
+          <AddIcon />
+          New article
+        </button>}
+        <SimpleDialog
+          title={title}
+          setTitle={setTitle}
+          description={description}
+          setDescription={setDescription}
+          open={open}
+          onClose={handleClose}
+        />
+      </div>
       { articles.map(({ title, description, id, content }) => (
         <div className='w-full flex flex-col items-center' key={id}>
           <div className='w-[60%] p-[10px] flex flex-col border-b-[1px]
