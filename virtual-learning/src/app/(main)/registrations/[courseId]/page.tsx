@@ -2,6 +2,7 @@
 
 import Button from '@/components/Button';
 import { TopBar } from '@/components/TopBar';
+import { fetchData } from '@/services/useApi';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
@@ -29,40 +30,19 @@ export default function RegistrateToCourse(
   const router = useRouter();
 
   async function loadCourse() {
-    const { courseId } = params;
-    const TOKEN = JSON.parse(localStorage.getItem('access_token') || '');
-    const URL = (process.env.NEXT_PUBLIC_SERVER_ENDPOINT as string) + `/courses/${courseId}/registration`;
-    const config = {
-      headers: {
-        role: 'student',
-        authorization: 'Bearer ' + TOKEN
-      },
-    }
-    const { data } = await axios.get(URL, { ...config });
-    console.log('Data:', data)
-    setCourse(data);
-    console.log('')
+    const PATH = `/courses/${params.courseId}/registration`;
+    const courseFromApi = await fetchData(PATH, 'get');
+    setCourse(courseFromApi);
   }
 
   async function registerToCourse() {
+    const PATH = '/registrations';
     const { courseId } = params;
-    const TOKEN = JSON.parse(localStorage.getItem('access_token') || '');
-    const URL = (process.env.NEXT_PUBLIC_SERVER_ENDPOINT as string) + '/registrations';
-    const config = {
-      headers: {
-        role: 'student',
-        authorization: 'Bearer ' + TOKEN
-      },
-    }
     let payload: any = { course_id: Number(courseId) };
     if (course?.password) payload = { ...payload, password }
-    try {
-      const { data } = await axios.post(URL, payload, { ...config });
-      console.log('Data:', data)
-      router.replace(`/courses/${courseId}/board`);
-    } catch (error) {
-      console.log('Error', error)
-    }
+
+    await fetchData(PATH, 'post', payload);
+    router.replace(`/courses/${courseId}/board`);
   }
 
   useEffect(() => {

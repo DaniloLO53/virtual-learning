@@ -6,6 +6,7 @@ import Link from 'next/link';
 import * as React from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import SimpleDialog from '@/components/SimpleDialog';
+import { fetchData } from '@/services/useApi';
 
 interface BoardParams {
   params: {
@@ -45,42 +46,15 @@ export default function Board({ params }: BoardParams) {
   };
 
   async function handlePublishArticle() {
-    const TOKEN = JSON.parse(localStorage.getItem('access_token') || '');
-    const role = JSON.parse(localStorage.getItem('role') || '');
-    const URL = (process.env.NEXT_PUBLIC_SERVER_ENDPOINT as string) + '/articles';
-    const config = {
-      headers: {
-        role,
-        authorization: 'Bearer ' + TOKEN
-      },
-    }
+    const PATH = '/articles';
     let payload: any = { title, description, course_id: Number(params.courseId) };
-    try {
-      const { data } = await axios.post(URL, payload, { ...config });
-      console.log('Data:', data)
-    } catch (error) {
-      console.log('Error', error)
-    }
+    await fetchData(PATH, 'post', payload);
   }
 
   async function loadArticles() {
-    const TOKEN = JSON.parse(localStorage.getItem('access_token') || '');
-    const URL = (process.env.NEXT_PUBLIC_SERVER_ENDPOINT as string) + `/articles/course/${courseId}`;
-    const config = {
-      headers: {
-        role,
-        authorization: 'Bearer ' + TOKEN
-      },
-    }
-    console.log('courseId', courseId)
-    console.log('URL', URL)
-    try {
-      const { data } = await axios.get(URL, { ...config });
-      setArticles(data);
-      console.log('Data from board:', data)
-    } catch (error) {
-      console.log('Error', error)
-    }
+    const PATH = `/articles/course/${courseId}`;
+    const articlesFromApi = await fetchData(PATH, 'get');
+    setArticles(articlesFromApi);
   }
 
   React.useEffect(() => {

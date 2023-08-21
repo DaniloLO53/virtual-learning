@@ -1,5 +1,6 @@
 "use client"
 
+import { fetchData } from '@/services/useApi';
 import axios from 'axios';
 import * as React from 'react';
 
@@ -16,28 +17,13 @@ export default function Section({ params }: SectionParams) {
   const [sectionTitle, setSectionTitle] = React.useState('');
 
   async function loadSection() {
-    const { sectionId } = params;
-    const TOKEN = JSON.parse(localStorage.getItem('access_token') || '');
-    const role = JSON.parse(localStorage.getItem('role') || '');
-
-    const URL = (process.env.NEXT_PUBLIC_SERVER_ENDPOINT as string) + `/articles/sections/${sectionId}`;
-    const config = {
-      headers: {
-        role,
-        authorization: 'Bearer ' + TOKEN
-      },
-    }
-    try {
-      const { data } = await axios.get(URL, { ...config });
-      const parser = new DOMParser();
-      const document = parser.parseFromString(data.content, "text/html");
-      const content = document.body;
-      setSectionContent(content);
-      setSectionTitle(data.title);
-      console.log('content:', content)
-    } catch (error) {
-      console.log('Error', error)
-    }
+    const PATH = `/articles/sections/${params.sectionId}`;
+    const sectionFromApi = await fetchData(PATH, 'get');
+    const parser = new DOMParser();
+    const document = parser.parseFromString(sectionFromApi.content, "text/html");
+    const content = document.body;
+    setSectionContent(content);
+    setSectionTitle(sectionFromApi.title);
   }
 
   React.useEffect(() => {

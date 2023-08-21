@@ -3,6 +3,7 @@ import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import axios from 'axios';
+import { fetchData } from '@/services/useApi';
 
 export default function BasicMenu({ children, registrationId, participants, setParticipants }: any) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -16,21 +17,9 @@ export default function BasicMenu({ children, registrationId, participants, setP
   };
 
   const removeStudent = async () => {
-    const TOKEN = JSON.parse(localStorage.getItem('access_token') || '');
-    const URL = (process.env.NEXT_PUBLIC_SERVER_ENDPOINT as string) + `/registrations/${registrationId}`;
-    const config = {
-      headers: {
-        role: 'teacher',
-        authorization: 'Bearer ' + TOKEN
-      },
-    }
-    try {
-      const { data } = await axios.delete(URL, { ...config });
-      setParticipants(data);
-      console.log('Data:', data)
-    } catch (error) {
-      console.log('Error', error)
-    }
+    const PATH = `/registrations/${registrationId}`;
+    const participantsFromApi = await fetchData(PATH, 'delete');
+    setParticipants(participantsFromApi);
   }
 
   return (

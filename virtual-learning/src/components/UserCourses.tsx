@@ -10,6 +10,7 @@ export const UserCourses = ({ courses }: any) => {
 
   const coursesList = () => {
     if (userRole) {
+      console.log('c', courses)
       return courses.map((course: any) => (
         parsedUserRole === 'student'
         ? <StudentCourseCard course={course} key={course.id}/>

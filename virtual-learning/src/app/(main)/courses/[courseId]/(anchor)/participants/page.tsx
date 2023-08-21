@@ -4,6 +4,7 @@ import axios from 'axios';
 import * as React from 'react';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import BasicMenu from '@/components/BasicMenu';
+import { fetchData } from '@/services/useApi';
 
 interface Student {
   student: {
@@ -28,24 +29,10 @@ export default function Participants({ params }: any) {
 
   async function loadParticipants() {
     const { courseId } = params;
-    const TOKEN = JSON.parse(localStorage.getItem('access_token') || '');
-    const URL = (process.env.NEXT_PUBLIC_SERVER_ENDPOINT as string)
-      + `/registrations/courses/${courseId}`;
-    const config = {
-      headers: {
-        role,
-        authorization: 'Bearer ' + TOKEN
-      },
-    }
-    try {
-      const { data } = await axios.get(URL, { ...config });
-      const { registrations, teacher } = data
-      console.log('regis', registrations)
-      setParticipants({ students: registrations, teacher });
-      console.log('Data from participants:', data)
-    } catch (error) {
-      console.log('Error', error)
-    }
+    const PATH = `/registrations/courses/${courseId}`;
+    const participantsFromApi = await fetchData(PATH, 'get');
+    const { registrations, teacher } = participantsFromApi
+    setParticipants({ students: registrations, teacher });
   }
 
   React.useEffect(() => {

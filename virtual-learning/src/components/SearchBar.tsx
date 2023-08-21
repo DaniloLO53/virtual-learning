@@ -1,22 +1,14 @@
+import { fetchData } from '@/services/useApi';
 import axios from 'axios';
 import * as React from 'react';
 
 export default function SearchBar({ setCourses, value, setValue }: any) {
-  async function handleSearch(event: any) {
-    const { target } = event;
+  async function handleSearch({ target }: any) {
+    const PATH = `/courses/query/?query=${target.value}`;
+    const coursesFromApi = await fetchData(PATH, 'get');
+    
     setValue(target.value);
-    const TOKEN = JSON.parse(localStorage.getItem('access_token') || '');
-    const URL = (process.env.NEXT_PUBLIC_SERVER_ENDPOINT as string) +
-      `/courses/query/?query=${target.value}`;
-    const config = {
-      headers: {
-        role: 'student',
-        authorization: 'Bearer ' + TOKEN
-      },
-    }
-    const { data } = await axios.get(URL, { ...config });
-
-    setCourses(data);
+    setCourses(coursesFromApi);
   }
 
   return (

@@ -4,6 +4,7 @@ import { SignUpData, SignInData, UserData } from '@/interfaces/user/UserData';
 import { createContext, ReactElement, useContext, useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import { fetchData } from '@/services/useApi';
 
 interface UserContext {
   userData: UserData;
@@ -32,25 +33,15 @@ export function UserProvider({ children }: any): ReactElement {
   });
   const router = useRouter();
 
-  async function signUpHandler(signUpData: SignUpData, role: 'student' | 'teacher') {
-    const URL = (process.env.NEXT_PUBLIC_SERVER_ENDPOINT as string) + '/auth/sign-up';
-    const config = {
-      headers: {
-        role: role
-      }
-    }
-    await axios.post(URL, signUpData, { ...config });
-    router.push('/sign-in')
+  async function signUpHandler(signUpData: SignUpData) {
+    const PATH = 'auth/sign-up';
+    await fetchData(PATH, 'post', signUpData);
+    router.push('/sign-in');
   }
 
-  async function signInHandler(signInData: SignInData, role: 'student' | 'teacher') {
-    const URL = (process.env.NEXT_PUBLIC_SERVER_ENDPOINT as string) + '/auth/sign-in';
-    const config = {
-      headers: {
-        role: role
-      }
-    }
-    const { data } = await axios.post(URL, signInData, { ...config });
+  async function signInHandler(signInData: SignInData) {
+    const PATH = 'auth/sign-in';
+    const { data } = await fetchData(PATH, 'post', signInData);
   
     localStorage.setItem('access_token', JSON.stringify(data.access_token));
     localStorage.setItem('role', JSON.stringify(data.role));

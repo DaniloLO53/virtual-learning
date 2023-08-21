@@ -2,6 +2,7 @@
 
 import Button from '@/components/Button';
 import Editor from '@/lib/lexical/Editor';
+import { fetchData } from '@/services/useApi';
 import axios from 'axios';
 import HTML from 'html-parse-stringify';
 import * as React from 'react';
@@ -18,22 +19,9 @@ export default function CreateSection({ params }: ArticleParams) {
 
   async function handlePublishSection() {
     const sectionContent = document.getElementById('editor-input')?.innerHTML;
-    const TOKEN = JSON.parse(localStorage.getItem('access_token') || '');
-    const role = JSON.parse(localStorage.getItem('role') || '');
-    const URL = (process.env.NEXT_PUBLIC_SERVER_ENDPOINT as string) + `/articles/${params.articleId}`;
-    const config = {
-      headers: {
-        role,
-        authorization: 'Bearer ' + TOKEN
-      },
-    }
     let payload: any = { content: sectionContent, title };
-    try {
-      const { data } = await axios.post(URL, payload, { ...config });
-      console.log('Data:', data)
-    } catch (error) {
-      console.log('Error', error)
-    }
+    const PATH = `/articles/${params.articleId}`;
+    await fetchData(PATH, 'post', payload); 
   }
 
   return (
