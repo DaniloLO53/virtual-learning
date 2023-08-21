@@ -18,21 +18,22 @@ export interface SimpleDialogProps {
   setTitle: any;
   description: string;
   setDescription: any;
+  handlePublishArticle: any
 }
 
 export default function SimpleDialog(props: SimpleDialogProps) {
-  const { onClose, open } = props;
+  const { onClose, open, handlePublishArticle } = props;
 
   const handleClose = () => {
-    onClose();
+    // onClose();
   };
 
-  const handleListItemClick = () => {
+  const handleCreateArticle = () => {
     onClose();
   };
 
   return (
-    <Dialog onClose={handleClose} open={open}>
+    <Dialog onClose={onClose} open={open}>
       <DialogTitle>Set backup account</DialogTitle>
       <List sx={{ pt: 0 }}>
           <ListItem disableGutters>
@@ -56,14 +57,14 @@ export default function SimpleDialog(props: SimpleDialogProps) {
         <ListItem disableGutters>
           <ListItemButton
             autoFocus
-            onClick={() => handleListItemClick()}
+            onClick={handlePublishArticle}
           >
             <ListItemAvatar>
               <Avatar>
                 <AddIcon />
               </Avatar>
             </ListItemAvatar>
-            <ListItemText primary="Add account" />
+            <ListItemText primary="Create" />
           </ListItemButton>
         </ListItem>
       </List>

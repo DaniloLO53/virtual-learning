@@ -2,7 +2,7 @@ import * as React from 'react';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Link from 'next/link';
 
-function ArticleSummaryLink({ id, title, updated_at, courseId }: any) {
+function Section({ article_id, section_id, title, updated_at, course_id }: any) {
   const [showDots, setShowDots] = React.useState(false);
   const role = JSON.parse(localStorage.getItem('role') || '');
   function handleMouseEnter(event: React.MouseEvent) {
@@ -29,10 +29,9 @@ function ArticleSummaryLink({ id, title, updated_at, courseId }: any) {
   return (
     <Link
       className='w-full p-[20px] flex items-center justify-between hover:bg-purple-200/40'
-      key={id}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      href={`/courses/${courseId}/articles/${id}`}
+      href={`/courses/${course_id}/articles/${article_id}/sections/${section_id}`}
     >
       <span className=''>
         { title }
@@ -56,4 +55,4 @@ function ArticleSummaryLink({ id, title, updated_at, courseId }: any) {
   )
 }
 
-export default ArticleSummaryLink;
+export default Section;
