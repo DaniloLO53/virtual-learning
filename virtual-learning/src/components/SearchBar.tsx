@@ -1,15 +1,21 @@
-import { fetchData } from '@/services/useApi';
+import { fetchData } from '@/services/fetchData';
 import axios from 'axios';
 import * as React from 'react';
 
 export default function SearchBar({ setCourses, value, setValue }: any) {
   async function handleSearch({ target }: any) {
-    const PATH = `/courses/query/?query=${target.value}`;
-    const coursesFromApi = await fetchData(PATH, 'get');
-    
     setValue(target.value);
-    setCourses(coursesFromApi);
   }
+
+  React.useEffect(() => {
+    async function fetchDataAsync() {
+      const PATH = `/courses/query/?query=${value}`;
+      const coursesFromApi = await fetchData(PATH, 'get');
+      setCourses(coursesFromApi);
+    }
+
+    fetchDataAsync();
+  }, [value]);
 
   return (
     <div className='p-[10px]'>

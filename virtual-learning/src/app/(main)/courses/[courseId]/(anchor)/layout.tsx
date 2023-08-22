@@ -15,9 +15,9 @@ export default function CourseLayout(
 { children, params }: CourseLayoutProps) {
 
   return (
-    <div>
+    <>
       <CourseTopBar courseId={ params.courseId } />
       { children }
-    </div>
+    </>
   )
 }

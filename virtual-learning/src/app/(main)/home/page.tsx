@@ -4,7 +4,8 @@ import Button from '@/components/Button';
 import { TopBar } from '@/components/TopBar';
 import { UserCourses } from '@/components/UserCourses';
 import { useUserContext } from '@/contexts/userContext';
-import { fetchData } from '@/services/useApi';
+import { fetchData } from '@/services/fetchData';
+import { Container } from '@mui/material';
 import axios from 'axios';
 import React, { useEffect } from 'react';
 
@@ -27,10 +28,10 @@ export default function Home() {
   }, [userData.courses.length, userData.access_token]);
 
   return (
-    <div className='flex justify-center'>
-      <UserCourses
-        courses={ userData.courses }
-      />
-    </div>
+    <Container
+      className='pt-topBar'
+    >
+      <UserCourses courses={ userData.courses } />
+    </Container>
   )
 }

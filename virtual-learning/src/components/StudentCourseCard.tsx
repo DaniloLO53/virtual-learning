@@ -1,10 +1,11 @@
 import Image from 'next/image';
 import CheckIcon from '@mui/icons-material/Check';
 import ClearIcon from '@mui/icons-material/Clear';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { Box, Grid } from '@mui/material';
+import StaticIcon from './StaticIcon';
 
 export const StudentCourseCard = ({ course }: any) => {
-  const router = useRouter()
   const { title, teacher, id } = course;
 
   console.log('course', course)
@@ -17,35 +18,27 @@ export const StudentCourseCard = ({ course }: any) => {
   }
 
   return (
-    <button
-      type='button'
-      onClick={() => router.replace(`/courses/${id}/board`)}
+    <Link
+      href={`/courses/${id}/board`}
     >
-      <div
-        className='w-[350px] h-[280px] border-slate-300 border-[1px] rounded-t-[35px] rounded-b-[10px] relative'
+      <Grid
+        className='w-[310px] h-[280px] border-slate-300 border-[1px] rounded-t-[35px] rounded-b-[10px]'
       >
-        <div className='rounded-t-[35px] h-[25%] py-[8px] border-b-slate-300 border-b-[1px]'>
-          <h3 className='text-[20px] w-[75%] flex pl-[25px]'>
-            <span className='truncate'>{ title }</span>
-          </h3>
-          <div className='w-[93%] flex items-center relative'>
-            <p className='text-[15px] font-light w-[75%] flex px-[25px] text-ellipsis overflow-hidden'>
-              <span className='truncate'>{ teacher.email }</span>
-            </p>
+        <Box
+          className='rounded-t-[35px] h-[25%] py-[8px] pl-[25px] border-b-slate-300
+          border-b-[1px] flex flex-col justify-between'
+        >
+          <span className='truncate text-[20px] w-[75%]'>{ title }</span>
+          <div className='flex items-center relative w-[95%]'>
+            <span className='truncate text-[15px] font-light w-full truncate'>{ teacher.email }</span>
             <div
               className='absolute bg-white rounded-[50%] right-[0px]'
             >
-              <Image
-                src='/default_profile.png'
-                alt='Default profile logo'
-                width={60}
-                height={60}
-                priority
-              />
+              <StaticIcon icon='teacherProfile' />
             </div>
           </div>
-        </div>
-        <div
+        </Box>
+        <Box
           className='flex flex-col items-start overflow-y-scroll max-h-[75%]'
         >
           {
@@ -70,8 +63,8 @@ export const StudentCourseCard = ({ course }: any) => {
               </div>
             ))
           }
-        </div>
-      </div>
-    </button>
+        </Box>
+      </Grid>
+    </Link>
   )
 }

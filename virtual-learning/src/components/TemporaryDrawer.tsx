@@ -7,13 +7,16 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useUserContext } from '@/contexts/userContext';
 import LogoutIcon from '@mui/icons-material/Logout';
+import Link from 'next/link';
+import { Box, Container, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Stack } from '@mui/material';
+import StaticIcon, { IconNames, Icons } from './StaticIcon';
 
 export default function TemporaryDrawer() {
   const { signOutHandler } = useUserContext();
-  const router = useRouter();
   const [state, setState] = React.useState(false);
   const [value, setValue] = React.useState('');
   const [courses, setCourses] = React.useState([]);
+  const isStudent = JSON.parse(localStorage.getItem('role') || '') === 'student';
 
   const toggleDrawer =
     (open: boolean) =>
@@ -31,69 +34,55 @@ export default function TemporaryDrawer() {
       setValue('');
     };
 
-  function backToHome() {
-    const role = JSON.parse(localStorage.getItem('role') || '');
-    router.replace('/home/');
-  }
-
   return (
-    <div>
-      <div className='flex items-center gap-x-[15px]'>
-        <button
+    <>
+      <Stack direction='row'>
+        <IconButton
+          aria-label="open drawer"
           onClick={toggleDrawer(true)}
-          className='bg-transparent border-none'
         >
-          <MenuIcon
-            className='text-purple-500 text-3xl'
-          />
-        </button>
-        <button
-          type='button'
-          onClick={backToHome}
-        >
-          <Image
-            src='/learnus.svg'
-            alt='Default profile logo'
-            width={140}
-            height={70}
-            priority
-          />
-        </button>
-      </div>
+          <MenuIcon className='text-purple-500 text-3xl' />
+        </IconButton>
+        <Link href='/home'>
+          <StaticIcon icon={IconNames.learnusLogo} />
+        </Link>
+      </Stack>
       <Drawer
         anchor='left'
         open={state}
         onClose={toggleDrawer(false)}
       >
-        <SearchBar setCourses={setCourses} value={value} setValue={setValue} />
+        {
+          isStudent &&
+          <SearchBar
+            setCourses={setCourses}
+            value={value}
+            setValue={setValue} 
+          />
+        }
           {
             courses.length > 0
             && value.length > 0
+            && isStudent
             && <SearchedCourses courses={courses} setState={setState} />
           }
           {
             courses.length === 0
             && value.length !== 0
+            && isStudent
             && <p className='px-[8px]'>No results</p>
           }
-          <ul
-            role='list'
-            className='divide-y divide-slate-400 flex flex-col p-[20px]'
-          >
-            <li className=''>
-              <button
-                className='flex flex-row items-center gap-x-[10px]'
-                type='button'
-                onClick={signOutHandler}
-              >
-                <span>
+          <List>
+            <ListItem>
+              <ListItemButton onClick={signOutHandler}>
+                <ListItemIcon>
                   <LogoutIcon />
-                </span>
-                Sign out
-              </button>
-            </li>
-          </ul>
+                </ListItemIcon>
+                <ListItemText primary='Sign out' />
+              </ListItemButton>
+            </ListItem>
+          </List>
       </Drawer>
-    </div>
+    </>
   );
 }

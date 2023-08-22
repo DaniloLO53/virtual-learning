@@ -2,7 +2,8 @@
 
 import Button from '@/components/Button';
 import { TopBar } from '@/components/TopBar';
-import { fetchData } from '@/services/useApi';
+import { fetchData } from '@/services/fetchData';
+import { Box, Container, Stack } from '@mui/material';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
@@ -50,25 +51,21 @@ export default function RegistrateToCourse(
   }, [course?.title])
 
   return (
-    <>
-      <TopBar />
-      <div className='w-full min-h-[calc(100vh-55px)] mt-[55px] flex justify-center'>
-        <div className='w-[50%] flex justify-end'>
-          <div className='w-[70%]  flex flex-col justify-start px-[30px] py-[80px]'>
+    <Stack justifyContent='center' direction='row' className='pt-[50px]'>
+      <Stack className='w-[60%]' direction='row' >
+        <Box className='w-[70%] p-[5%] bg-purple-100'>
             <h2 className='text-[28px] font-extrabold  pt-[40px] pb-[50px]'>{ course?.title }</h2>
             <p className=' block'>Teacher:&nbsp; &nbsp;{ course?.teacher.email }</p>
             <p className=' block'>Code:&nbsp; &nbsp;{ course?.code }</p>
             <p className='py-[16px]'>
               { course?.description}
             </p>
-          </div>
-        </div>
-        <div className='w-[50%] flex justify-start'>
-          <div className='w-[70%]  flex flex-col justify-start px-[30px] py-[120px]'>
+        </Box>
+        <Box className='bg-green-100'>
             { course?.password && course?.registrations.length === 0 && <input
               className='p-[10px] mb-[20px] rounded-[8px] border-solid border-slate-400 border-[1px]'
               type='text'
-              placeholder='Enter with password'
+              placeholder='Password'
               value={password!}
               onChange={({ target }) => setPassword(target.value)}
             />}
@@ -77,9 +74,8 @@ export default function RegistrateToCourse(
             >
               Register
             </Button> : <p>You&apos;re already registered to this course</p>}
-          </div>
-        </div>
-      </div>
-    </>
+        </Box>
+      </Stack>
+    </Stack>
   )
 }

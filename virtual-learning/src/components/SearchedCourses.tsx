@@ -1,11 +1,12 @@
+import { List } from '@mui/material';
 import * as React from 'react';
 import SearchedCourse from './SearchedCourse';
 
 export default function SearchedCourses({ courses, setState }: any) {
 
   return (
-    <ul
-      className='flex flex-col max-h-[50%] overflow-y-scroll border-b-slate-300 border-b-[1px]'
+    <List
+      // className='flex flex-col max-h-[50%] overflow-y-scroll border-b-slate-300 border-b-[1px]'
     >
       {
         courses.length > 0 ? courses.map((course: any, index: number) => (
@@ -16,6 +17,6 @@ export default function SearchedCourses({ courses, setState }: any) {
           />
         ))
        : <li>No results</li>}
-    </ul>
+    </List>
   );
 }

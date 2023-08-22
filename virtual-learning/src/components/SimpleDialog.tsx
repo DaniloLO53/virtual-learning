@@ -9,7 +9,7 @@ import ListItemText from '@mui/material/ListItemText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
 import AddIcon from '@mui/icons-material/Add';
-import { TextField } from '@mui/material';
+import { styled, TextField, TextareaAutosize } from '@mui/material';
 
 export interface SimpleDialogProps {
   open: boolean;
@@ -21,21 +21,31 @@ export interface SimpleDialogProps {
   handlePublishArticle: any
 }
 
+const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+  '& .MuiDialogContent-root': {
+    padding: theme.spacing(20),
+  },
+  '& .MuiDialogActions-root': {
+    padding: theme.spacing(20),
+  },
+}));
+
 export default function SimpleDialog(props: SimpleDialogProps) {
   const { onClose, open, handlePublishArticle } = props;
 
-  const handleClose = () => {
-    // onClose();
-  };
-
-  const handleCreateArticle = () => {
-    onClose();
-  };
-
   return (
-    <Dialog onClose={onClose} open={open}>
-      <DialogTitle>Set backup account</DialogTitle>
-      <List sx={{ pt: 0 }}>
+    <BootstrapDialog
+      onClose={onClose}
+      open={open}
+      sx={{
+        padding: '50px'
+      }}
+    >
+      <DialogTitle>Set your article infos</DialogTitle>
+      <List
+        sx={{ pt: 0, paddingX: '20px' }}
+        className='flex flex-col justify-center'
+      >
           <ListItem disableGutters>
             <TextField
               id="outlined-basic"
@@ -46,10 +56,12 @@ export default function SimpleDialog(props: SimpleDialogProps) {
             />
           </ListItem>
           <ListItem disableGutters>
-            <TextField
+            <TextareaAutosize
+              className='p-[10px] rounded-[4px] border-slate-300 border-[1px]'
               id="outlined-basic"
-              label="Description"
-              variant="outlined"
+              placeholder='Description'
+              minRows={5}
+              maxRows={10}
               value={props.description}
               onChange={({ target }) => props.setDescription(target.value)}
             />
@@ -68,6 +80,6 @@ export default function SimpleDialog(props: SimpleDialogProps) {
           </ListItemButton>
         </ListItem>
       </List>
-    </Dialog>
+    </BootstrapDialog>
   );
 }

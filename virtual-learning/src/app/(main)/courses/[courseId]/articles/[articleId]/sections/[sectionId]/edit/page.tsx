@@ -7,24 +7,40 @@ import { TextField } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import * as React from 'react';
 
-export interface ArticleParams {
+export interface SectionParams {
   params: {
     articleId: string;
     courseId: string;
+    sectionId: string;
   }
 }
 
-export default function CreateSection({ params }: ArticleParams) {
-  const [title, setTitle] = React.useState('');
+export default function EditSection({ params }: SectionParams) {
+  const [sectionContent, setSectionContent] = React.useState<any>(null);
+  const [sectionTitle, setSectionTitle] = React.useState('');
   const router = useRouter();
 
   async function handlePublishSection() {
     const sectionContent = document.getElementById('editor-input')?.innerHTML;
-    let payload: any = { content: sectionContent, title };
+    let payload: any = { content: sectionContent, sectionTitle };
     const PATH = `/articles/${params.articleId}`;
     await fetchData(PATH, 'post', payload);
     router.back();
   }
+
+  async function loadSection() {
+    const PATH = `/articles/sections/${params.sectionId}`;
+    const sectionFromApi = await fetchData(PATH, 'get');
+    const parser = new DOMParser();
+    const document = parser.parseFromString(sectionFromApi.content, "text/html");
+    const content = document.body;
+    setSectionContent(content);
+    setSectionTitle(sectionFromApi.title);
+  }
+
+  React.useEffect(() => {
+    loadSection();
+  }, []);
 
   return (
     <div
@@ -35,11 +51,11 @@ export default function CreateSection({ params }: ArticleParams) {
           id="section-title"
           label="Title"
           variant="outlined"
-          value={title}
-          onChange={({ target }) => setTitle(target.value)}
+          value={sectionTitle}
+          onChange={({ target }) => setSectionTitle(target.value)}
           className='bg-white'
         />
-        <Editor />
+        <Editor content={sectionContent} />
         <Button
           onClick={handlePublishSection}
           className='w-[200px]'

@@ -3,7 +3,7 @@ import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import axios from 'axios';
-import { fetchData } from '@/services/useApi';
+import { fetchData } from '@/services/fetchData';
 
 export default function BasicMenu({ children, registrationId, participants, setParticipants }: any) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);

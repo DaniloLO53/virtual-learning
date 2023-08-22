@@ -4,7 +4,7 @@ import axios from 'axios';
 import * as React from 'react';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import BasicMenu from '@/components/BasicMenu';
-import { fetchData } from '@/services/useApi';
+import { fetchData } from '@/services/fetchData';
 
 interface Student {
   student: {

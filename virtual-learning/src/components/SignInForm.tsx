@@ -3,12 +3,14 @@ import { FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/mater
 import Image from 'next/image'
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import Button from './Button'
+import Button from './Button';
+
+type Role = 'student' | 'teacher';
 
 export const SignInForm = () => {
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
-  const [role, setRole] = useState('student');
+  const [role, setRole] = useState<Role>('student');
   const { signInHandler } = useUserContext();
   const router = useRouter();
   const formIsValid = password.length > 0 && email.length > 0;
@@ -60,7 +62,7 @@ export const SignInForm = () => {
             id='role'
             value={role}
             label='Sign up as'
-            onChange={({ target }) => setRole(target.value)}
+            onChange={({ target }) => setRole(target.value as Role)}
           >
             <MenuItem value={'student'}>Student</MenuItem>
             <MenuItem value={'teacher'}>Teacher</MenuItem>

@@ -1,17 +1,26 @@
 import axios from "axios";
 
 type Method = 'get' | 'post' | 'delete';
-type Args = [path: string, method: Method, payload?: any];
+type Role = 'student' | 'teacher';
+type Args = [path: string, method: Method, payload?: any, signInRole?: Role];
 
 export async function fetchData(...args: Args) {
-  const [path, method, payload] = args;
-  const TOKEN = JSON.parse(localStorage.getItem('access_token') || '');
-  const role = JSON.parse(localStorage.getItem('role') || '');
+  const [path, method, payload, signInRole] = args;
+  let TOKEN;
+  let ROLE;
+
+  if (!localStorage.getItem('access_token') || !localStorage.getItem('role')) {
+    TOKEN = '';
+    ROLE = '';
+  } else {
+    TOKEN = JSON.parse(localStorage.getItem('access_token')!);
+    ROLE = JSON.parse(localStorage.getItem('role')!);
+  }
 
   const url = (process.env.NEXT_PUBLIC_SERVER_ENDPOINT as string) + `${path}`;
   const config = {
     headers: {
-      role,
+      role: signInRole || ROLE,
       authorization: 'Bearer ' + TOKEN
     },
   }

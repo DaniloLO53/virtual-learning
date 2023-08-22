@@ -26,9 +26,21 @@ function Section({ article_id, section_id, title, updated_at, course_id }: any) 
     return showDots;
   }
 
+  function formatUpdatedAt(updatedAt: string): string {
+    const date = new Date(updatedAt);
+    
+    const year = date.getUTCFullYear().toString();
+    const month = (date.getUTCMonth() + 1).toString().padStart(2, '0');
+    const day = date.getUTCDate().toString().padStart(2, '0');
+    const hours = date.getUTCHours().toString().padStart(2, '0');
+    const minutes = date.getUTCMinutes().toString().padStart(2, '0');
+    
+    return `${year}-${month}-${day} • ${hours}:${minutes}`;
+  }
+
   return (
     <Link
-      className='w-full p-[20px] flex items-center justify-between hover:bg-purple-200/40'
+      className='w-full p-[15px] flex items-center justify-between hover:bg-purple-200/40'
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       href={`/courses/${course_id}/articles/${article_id}/sections/${section_id}`}
@@ -40,7 +52,7 @@ function Section({ article_id, section_id, title, updated_at, course_id }: any) 
           <span className=''>
             <span>Last update:</span>
             &nbsp;
-            <span>{ updated_at }</span>
+            <span>{ formatUpdatedAt(updated_at) }</span>
           </span>
           {role === 'teacher' &&
           <button
