@@ -17,14 +17,14 @@ export interface SectionParams {
 
 export default function EditSection({ params }: SectionParams) {
   const [sectionContent, setSectionContent] = React.useState<any>(null);
-  const [sectionTitle, setSectionTitle] = React.useState('');
+  const [title, setTitle] = React.useState('');
   const router = useRouter();
 
-  async function handlePublishSection() {
+  async function handleEditSection() {
     const sectionContent = document.getElementById('editor-input')?.innerHTML;
-    let payload: any = { content: sectionContent, sectionTitle };
-    const PATH = `/articles/${params.articleId}`;
-    await fetchData(PATH, 'post', payload);
+    let payload: any = { content: sectionContent, title };
+    const PATH = `/articles/sections/${params.sectionId}`;
+    await fetchData(PATH, 'put', payload);
     router.back();
   }
 
@@ -35,7 +35,7 @@ export default function EditSection({ params }: SectionParams) {
     const document = parser.parseFromString(sectionFromApi.content, "text/html");
     const content = document.body;
     setSectionContent(content);
-    setSectionTitle(sectionFromApi.title);
+    setTitle(sectionFromApi.title);
   }
 
   React.useEffect(() => {
@@ -51,16 +51,16 @@ export default function EditSection({ params }: SectionParams) {
           id="section-title"
           label="Title"
           variant="outlined"
-          value={sectionTitle}
-          onChange={({ target }) => setSectionTitle(target.value)}
+          value={title}
+          onChange={({ target }) => setTitle(target.value)}
           className='bg-white'
         />
         <Editor content={sectionContent} />
         <Button
-          onClick={handlePublishSection}
+          onClick={handleEditSection}
           className='w-[200px]'
         >
-          Publish
+          Edit
         </Button>
       </div>
     </div>

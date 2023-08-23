@@ -13,7 +13,7 @@ export default function MainLayout({
     <>
       <TopBar />
       { children }
-      <Footer />
+      {/* <Footer /> */}
     </>
   )
 }

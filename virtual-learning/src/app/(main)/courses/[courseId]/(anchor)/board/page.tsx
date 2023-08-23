@@ -66,7 +66,7 @@ export default function Board({ params }: BoardParams) {
       <div className='w-[60%] flex flex-col items-start pt-[20px]'>
         { role === 'teacher' &&
           <button
-            className='p-[10px] text-purple-500 font-bold flex items-center'
+            className='p-[10px] text-purple-500 font-bold text-[22px] flex items-center'
             type='button'
             onClick={handleClickOpen}
           >

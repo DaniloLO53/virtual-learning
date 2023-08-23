@@ -35,6 +35,12 @@ export default function Participants({ params }: any) {
     setParticipants({ students: registrations, teacher });
   }
 
+  const removeStudent = async (id: any) => {
+    const PATH = `/registrations/${id}`;
+    const participantsFromApi = await fetchData(PATH, 'delete');
+    setParticipants(participantsFromApi);
+  }
+
   React.useEffect(() => {
     loadParticipants();
   }, [])
@@ -88,9 +94,8 @@ export default function Participants({ params }: any) {
                   role === 'teacher'
                   &&
                   <BasicMenu
-                    registrationId={id}
-                    setParticipants={setParticipants}
-                    participants={participants}
+                    id={id}
+                    callBack={removeStudent}
                   >
                     <MoreHorizIcon
                       sx={{

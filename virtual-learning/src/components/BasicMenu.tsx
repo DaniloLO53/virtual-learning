@@ -5,9 +5,8 @@ import MenuItem from '@mui/material/MenuItem';
 import axios from 'axios';
 import { fetchData } from '@/services/fetchData';
 
-export default function BasicMenu({ children, registrationId, participants, setParticipants }: any) {
+export default function BasicMenu({ children, id, callBack }: any) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  console.log('registrationId', registrationId)
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -15,12 +14,6 @@ export default function BasicMenu({ children, registrationId, participants, setP
   const handleClose = ({ target }: any) => {
     setAnchorEl(null);
   };
-
-  const removeStudent = async () => {
-    const PATH = `/registrations/${registrationId}`;
-    const participantsFromApi = await fetchData(PATH, 'delete');
-    setParticipants(participantsFromApi);
-  }
 
   return (
     <div>
@@ -42,7 +35,7 @@ export default function BasicMenu({ children, registrationId, participants, setP
           'aria-labelledby': 'basic-button',
         }}
       >
-        <MenuItem id='remove' onClick={removeStudent}>Remove</MenuItem>
+        <MenuItem id='remove' onClick={() => callBack(id)}>Remove</MenuItem>
       </Menu>
     </div>
   );

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-type Method = 'get' | 'post' | 'delete';
+type Method = 'get' | 'post' | 'put' | 'delete';
 type Role = 'student' | 'teacher';
 type Args = [path: string, method: Method, payload?: any, signInRole?: Role];
 
@@ -26,7 +26,7 @@ export async function fetchData(...args: Args) {
   }
   try {
     let response;
-    if (method === 'post') {
+    if (method === 'post' || method === 'put') {
       const { data } = await axios[method](url, payload, config);
       response = data;
     } else {

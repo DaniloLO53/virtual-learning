@@ -5,12 +5,11 @@ import ExampleTheme from "./themes/ExampleTheme";
 import { LexicalComposer } from "@lexical/react/LexicalComposer";
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { ContentEditable } from "@lexical/react/LexicalContentEditable";
-import { HistoryPlugin, HistoryState } from "@lexical/react/LexicalHistoryPlugin";
+import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
 import { AutoFocusPlugin } from "@lexical/react/LexicalAutoFocusPlugin";
 import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary";
 import TreeViewPlugin from "./plugins/TreeViewPlugin";
 import ToolbarPlugin from "./plugins/ToolbarPlugin";
-import AddContentPlugin from "./plugins/AddContentPlugin"
 import { HeadingNode, QuoteNode } from "@lexical/rich-text";
 import { TableCellNode, TableNode, TableRowNode } from "@lexical/table";
 import { ListItemNode, ListNode } from "@lexical/list";
@@ -24,32 +23,20 @@ import { TRANSFORMERS } from "@lexical/markdown";
 import ListMaxIndentLevelPlugin from "./plugins/ListMaxIndentLevelPlugin";
 import CodeHighlightPlugin from "./plugins/CodeHighlightPlugin";
 import AutoLinkPlugin from "./plugins/AutoLinkPlugin";
-import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
-import { $createTextNode, $getRoot, $insertNodes, $isDecoratorNode, $isElementNode, EditorState } from "lexical";
-import {$generateNodesFromDOM} from '@lexical/html';
-import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
+import HtmlPlugin from "./plugins/HtmlPlugin";
+import { useEffect } from "react";
+import { fetchData } from "@/services/fetchData";
 
 function Placeholder() {
   return <div className="editor-placeholder">Enter some rich text...</div>;
 }
 
-const onChange = (editorState: EditorState) => {
-  editorState.read(() => {
-    const json = editorState.toJSON();
-    console.log('STRINGUIFADO', JSON.stringify(json));
-  })
-}
-
-
 interface EditorProps {
   content?: HTMLElement;
+  readOnly?: boolean
 }
 
-export default function Editor({ content }: EditorProps) {
-  console.log('CONTENT', content)
-  const EMPTY_CONTENT =
-  '{"root":{"children":[{"children":[],"direction":null,"format":"","indent":0,"type":"paragraph","version":1}],"direction":null,"format":"","indent":0,"type":"root","version":1}}';
-
+export default function Editor({ content, readOnly }: EditorProps) {
   const editorConfig = {
     namespace: 'teste',
     // The editor theme
@@ -72,25 +59,15 @@ export default function Editor({ content }: EditorProps) {
       AutoLinkNode,
       LinkNode
     ],
-    editorState: (editor: any) => {
-      editor.update(() => {
-        const parser = new DOMParser();
-        const dom = parser.parseFromString(JSON.stringify(content), "text/html");
-        const nodes = $generateNodesFromDOM(editor, dom)
-        const root = $getRoot()
-      //   nodes.forEach((node, i) => {
-	    //   // if ($isElementNode(node) || $isDecoratorNode(node)) {
-      //   // }
-      // })
-        $insertNodes(nodes);
-    });
+    editable: !readOnly,
+  }
 
   return (
     <LexicalComposer
       initialConfig={editorConfig}
     >
       <div className="editor-container">
-        <ToolbarPlugin />
+        { !readOnly && <ToolbarPlugin />}
         <div className="editor-inner">
           <RichTextPlugin
             contentEditable={
@@ -102,8 +79,11 @@ export default function Editor({ content }: EditorProps) {
             placeholder={<Placeholder />}
             ErrorBoundary={LexicalErrorBoundary}
           />
+          <HtmlPlugin
+            onHtmlChanged={(html: any) => console.log('onChanged', html)}
+            initialHtml={`${content?.innerHTML}`}
+          />
           <HistoryPlugin />
-          <OnChangePlugin onChange={onChange}/>
           {/* <TreeViewPlugin /> */}
           <AutoFocusPlugin />
           <CodeHighlightPlugin />

@@ -1,6 +1,6 @@
 body {
   margin: 0;
-  background: #eee;
+  /* background: #eee; */
   font-family: system-ui, -apple-system, BlinkMacSystemFont, ".SFNSText-Regular",
     sans-serif;
   font-weight: 500;
@@ -58,7 +58,7 @@ h1 {
 }
 
 .editor-inner {
-  background: #fff;
+  background: white;
   position: relative;
 }
 
