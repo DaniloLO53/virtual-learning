@@ -11,6 +11,11 @@ module.exports = {
     },
     padding: {
       topBar: '50px',
+    },
+    extend: {
+      gridTemplateRows: {
+        'fileUpload': '0.25fr auto'
+      }
     }
   },
 

@@ -81,7 +81,9 @@ export default function Board({ params }: BoardParams) {
           setDescription={setDescription}
           open={open}
           onClose={handleClose}
-          handlePublishArticle={handlePublishArticle}
+          customProps={{
+            submit: handlePublishArticle,
+          }}
         />
         { articles?.map(({ title, description, id: article_id, sections }) => (
           <Article
