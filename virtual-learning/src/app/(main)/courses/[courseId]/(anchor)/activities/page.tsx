@@ -6,7 +6,8 @@ import BasicMenu from '@/components/BasicMenu';
 import { fetchData } from '@/services/fetchData';
 import AddIcon from '@mui/icons-material/Add';
 import CustomizedAccordion from '@/components/CustomizedAccordion';
-import SimpleDialog from '@/components/SimpleDialog';
+import SimpleDialog from '@/components/ActivityDialog';
+import ActivityDialog from '@/components/ActivityDialog';
 
 interface Student {
   student: {
@@ -56,15 +57,6 @@ export default function Activities({ params }: any) {
     setDescription('');
   };
 
-  async function handlePublishActivity() {
-    const PATH = '/articles';
-    const formData = new FormData();
-    // formData.append('file', file)
-    let payload: any = { title, description, course_id: Number(params.courseId) };
-    // await fetchData(PATH, 'post', payload);
-    handleClose();
-  }
-
   React.useEffect(() => {
     loadActivities();
   }, [])
@@ -94,19 +86,13 @@ export default function Activities({ params }: any) {
               New activity
             </button>
           }
-          <SimpleDialog
+          <ActivityDialog
             title={title}
             setTitle={setTitle}
             description={description}
             setDescription={setDescription}
             open={open}
-            onClose={handleClose}
-            customProps={{
-              setNewActivity: setNewActivity,
-              newActivity: newActivity,
-              submit: handlePublishActivity,
-            }}
-            upload={true}
+            handleClose={handleClose}
           />
           <CustomizedAccordion activities={activities}/>
         </div>

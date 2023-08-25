@@ -7,23 +7,16 @@ import ClearIcon from '@mui/icons-material/Clear';
 import uniqid from 'uniqid';
 
 export type FileUploadProps = {
-  accept: string
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
-  onDrop: (event: React.DragEvent<HTMLElement>) => void
+  selectedFiles: any
+  setSelectedFiles: any
 }
 
-export const FileUpload: React.FC<FileUploadProps> = ({ accept, onChange, onDrop }) => {
-    const [imageUrl, setImageUrl] = React.useState('')
-    const [labelText, setLabelText] = React.useState<string>('Click or drag to upload file')
-    const [isDragOver, setIsDragOver] = React.useState<boolean>(false)
-    const [isMouseOver, setIsMouseOver] = React.useState<boolean>(false)
-    const [selectedFiles, setSelectedFiles] = useState<any[]>([]);
-
-    const stopDefaults = (e: React.DragEvent) => {
-      e.stopPropagation()
-      e.preventDefault()
-    }
-    const dragEvents = {
+export const FileUpload: React.FC<FileUploadProps> = ({ selectedFiles, setSelectedFiles }) => {
+    // const stopDefaults = (e: React.DragEvent) => {
+    //   e.stopPropagation()
+    //   e.preventDefault()
+    // }
+    // const dragEvents = {
       // onMouseEnter: () => {
       //   setIsMouseOver(true)
       // },
@@ -53,7 +46,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({ accept, onChange, onDrop
       //   }
       //   onDrop(e)
       // },
-    }
+    // }
 
     const filesizes = (bytes: any, decimals = 2) => {
       if (bytes === 0) return '0 Bytes';
@@ -68,10 +61,11 @@ export const FileUpload: React.FC<FileUploadProps> = ({ accept, onChange, onDrop
       Object.values(event.target?.files || {}).forEach((file: any) => {
         const reader = new FileReader();
         reader.onloadend = () => {
-          setSelectedFiles((prevState) => (
+          setSelectedFiles((prevState: any) => (
             [
               ...prevState,
               {
+                raw: file,
                 id: uniqid(),
                 filename: file.name,
                 filetype: file.type,
@@ -85,21 +79,24 @@ export const FileUpload: React.FC<FileUploadProps> = ({ accept, onChange, onDrop
         file && reader.readAsDataURL(file);
         return
       })
-      onChange(event)
     }
 
     function handleDeleteSelectedItem(id: string) {
-      const filteredFiles = selectedFiles.filter((file) => file.id !== id);
+      const filteredFiles = selectedFiles.filter((file: any) => file.id !== id);
       console.log('filteredFiles', filteredFiles)
       console.log('selectedFiles', selectedFiles)
       setSelectedFiles(filteredFiles);
+    }
+
+    function handleClick() {
+
     }
 
     return (
       <div className='w-full min-h-[150px]'>
         <input
           onChange={handleChange}
-          accept={accept}
+          accept='.pdf,.jpg,.jpeg,.png'
           multiple
           id="file-upload"
           type="file"
@@ -108,7 +105,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({ accept, onChange, onDrop
         <label
           htmlFor="file-upload"
           className=''
-          {...dragEvents}
+          // {...dragEvents}
         >
           <div
             className='bg-slate-100 min-h-full flex items-center justify-center'
@@ -126,13 +123,13 @@ export const FileUpload: React.FC<FileUploadProps> = ({ accept, onChange, onDrop
                 className='flex flex-col items-center p-[20px] opacity-60 hover:opacity-100'
               >
                 <CloudUploadIcon fontSize="large" />
-                <Typography>{labelText}</Typography>
+                <Typography>{'Click or drag to upload file'}</Typography>
               </div>
           </div>
         </label>
         <div className='flex flex-wrap justify-between gap-y-[5px]'>
         {
-          selectedFiles.map((data, index) => {
+          selectedFiles.map((data: any, index: number) => {
             const { filename, filetype, fileimage, datetime, filesize, id } = data;
             return (
               <div className="border-[1px] border-slate-200 w-[50%] flex h-[180px] p-[10px]" key={index}>

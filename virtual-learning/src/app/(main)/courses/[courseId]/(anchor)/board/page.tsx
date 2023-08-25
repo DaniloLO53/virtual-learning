@@ -4,9 +4,10 @@ import Section from '@/components/Section';
 import Link from 'next/link';
 import * as React from 'react';
 import AddIcon from '@mui/icons-material/Add';
-import SimpleDialog from '@/components/SimpleDialog';
+import SimpleDialog from '@/components/ActivityDialog';
 import { fetchData } from '@/services/fetchData';
 import { Article } from '@/components/Article';
+import ArticleDialog from '@/components/ArticleDialog';
 
 interface BoardParams {
   params: {
@@ -74,16 +75,14 @@ export default function Board({ params }: BoardParams) {
             New article
           </button>
         }
-        <SimpleDialog
+        <ArticleDialog
           title={title}
           setTitle={setTitle}
           description={description}
           setDescription={setDescription}
           open={open}
           onClose={handleClose}
-          customProps={{
-            submit: handlePublishArticle,
-          }}
+          handlePublishArticle={handlePublishArticle}
         />
         { articles?.map(({ title, description, id: article_id, sections }) => (
           <Article

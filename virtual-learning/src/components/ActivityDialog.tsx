@@ -11,29 +11,18 @@ import Dialog from '@mui/material/Dialog';
 import AddIcon from '@mui/icons-material/Add';
 import { styled, TextField, TextareaAutosize, Box } from '@mui/material';
 import { FileUpload, FileUploadProps } from './FileUpload';
+import { useParams } from 'next/navigation';
+import { fetchData } from '@/services/fetchData';
+import axios from 'axios';
+import FormData from 'form-data';
 
-const fileUploadProp: FileUploadProps = {
-  accept: '.pdf,.jpg,.png,.jpeg',
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log('EVENT', event)
-    if (event.target.files !== null && event.target?.files?.length > 0) {
-        console.log(`Saving ${event.target.value}`)
-      }
-    },
-  onDrop: (event: React.DragEvent<HTMLElement>) => {
-    console.log(`Drop ${event.dataTransfer.files[0].name}`)
-  },
-}
-
-export interface SimpleDialogProps {
+export interface ActivityDialogProps {
   open: boolean;
-  onClose: () => any;
+  handleClose: () => any;
   title: string;
   setTitle: any;
   description: string;
   setDescription: any;
-  customProps?: any;
-  upload?: boolean;
 }
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
@@ -45,12 +34,40 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   },
 }));
 
-export default function SimpleDialog(props: SimpleDialogProps) {
-  const { onClose, open, customProps } = props;
+export default function ActivityDialog(props: ActivityDialogProps) {
+  const { handleClose, open } = props;
+  const [selectedFiles, setSelectedFiles] = React.useState([]);
+  const params = useParams();
+
+  async function handlePublishActivity(event: React.MouseEvent) {
+    const { courseId } = params;
+    const PATH = `/courses/${courseId}/activities/upload/teacher`;
+    const formData = new FormData();
+    selectedFiles.forEach((file: any) => formData.append('files', file.raw));
+
+    console.log('selected files', selectedFiles)
+
+    // const result = await fetchData(PATH, 'post', formData);
+    const result = await axios({
+      method: 'post',
+      url: 'http://localhost:5000' + PATH,
+      headers: {
+        authorization: 'Bearer ' + JSON.parse(localStorage.getItem('access_token')!),
+        "Content-Type": 'multipart/form-data',
+      },
+      data: formData,
+
+    })
+    console.log('result', result)
+
+    setSelectedFiles([]);
+    handleClose();
+  }
+  
 
   return (
     <BootstrapDialog
-      onClose={onClose}
+      onClose={handleClose}
       open={open}
       fullWidth={true}
       maxWidth='md'
@@ -84,12 +101,12 @@ export default function SimpleDialog(props: SimpleDialogProps) {
             />
           </ListItem>
           <div className=''>
-            <FileUpload {...fileUploadProp} />
+            <FileUpload selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles} />
           </div>
         <ListItem disableGutters>
           <ListItemButton
             autoFocus
-            onClick={customProps.submit}
+            onClick={handlePublishActivity}
           >
             <ListItemAvatar>
               <Avatar>
