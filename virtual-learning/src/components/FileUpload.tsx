@@ -59,6 +59,7 @@ export const FileUpload: React.FC<FileUploadProps> = ({ selectedFiles, setSelect
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       Object.values(event.target?.files || {}).forEach((file: any) => {
+        console.log('FILE', file);
         const reader = new FileReader();
         reader.onloadend = () => {
           setSelectedFiles((prevState: any) => (
@@ -72,12 +73,12 @@ export const FileUpload: React.FC<FileUploadProps> = ({ selectedFiles, setSelect
                 fileimage: reader.result,
                 datetime: file.lastModifiedDate.toLocaleString('en-IN'),
                 filesize: filesizes(file.size)
-            }
+              }
             ]
           ))
         }
         file && reader.readAsDataURL(file);
-        return
+        return;
       })
     }
 
@@ -86,10 +87,6 @@ export const FileUpload: React.FC<FileUploadProps> = ({ selectedFiles, setSelect
       console.log('filteredFiles', filteredFiles)
       console.log('selectedFiles', selectedFiles)
       setSelectedFiles(filteredFiles);
-    }
-
-    function handleClick() {
-
     }
 
     return (

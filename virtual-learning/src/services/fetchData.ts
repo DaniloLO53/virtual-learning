@@ -30,8 +30,8 @@ export async function fetchData(...args: Args) {
       const { data } = await axios[method](url, payload, config);
       response = data;
     } else {
-      const { data } = await axios[method](url, config);
-      response = data;
+      const result = await axios[method](url, config);
+      response = result.data;
     }
     console.log('data', response)
     return response;

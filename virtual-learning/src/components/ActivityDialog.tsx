@@ -9,12 +9,13 @@ import ListItemText from '@mui/material/ListItemText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
 import AddIcon from '@mui/icons-material/Add';
-import { styled, TextField, TextareaAutosize, Box } from '@mui/material';
+import { styled, TextField, TextareaAutosize, Box, Checkbox } from '@mui/material';
 import { FileUpload, FileUploadProps } from './FileUpload';
 import { useParams } from 'next/navigation';
 import { fetchData } from '@/services/fetchData';
 import axios from 'axios';
-import FormData from 'form-data';
+import Calendar from './Calendar';
+import { v4 as uuidv4 } from 'uuid';
 
 export interface ActivityDialogProps {
   open: boolean;
@@ -35,30 +36,42 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 }));
 
 export default function ActivityDialog(props: ActivityDialogProps) {
-  const { handleClose, open } = props;
+  const { handleClose, open, title, description } = props;
   const [selectedFiles, setSelectedFiles] = React.useState([]);
+  const [deadline, setDeadline] = React.useState<Date | null>(null);
+  const [noDeadline, setNoDeadline] = React.useState<boolean>(false);
   const params = useParams();
+
+  function formatDate(inputDate: Date | null) {
+    if (!inputDate) return null;
+  
+    const day = String(inputDate.getDate()).padStart(2, '0');
+    const month = String(inputDate.getMonth() + 1).padStart(2, '0');
+    const year = String(inputDate.getFullYear());
+  
+    return `${day}-${month}-${year}`;
+  }
 
   async function handlePublishActivity(event: React.MouseEvent) {
     const { courseId } = params;
-    const PATH = `/courses/${courseId}/activities/upload/teacher`;
+    const activityUUID = uuidv4();
+    const PATH_UPLOAD = `/files/activities/${activityUUID}/upload/teacher`;
+    const PATH_ACTIVITY = `/courses/${courseId}/activities`;
     const formData = new FormData();
     selectedFiles.forEach((file: any) => formData.append('files', file.raw));
 
-    console.log('selected files', selectedFiles)
+    await fetchData(PATH_ACTIVITY, 'post', { title, description, deadline: formatDate(deadline), uuid: activityUUID });
+    await fetchData(PATH_UPLOAD, 'post', formData);
+    // const result = await axios({
+    //   method: 'post',
+    //   url: 'http://localhost:5000' + PATH,
+    //   headers: {
+    //     authorization: 'Bearer ' + JSON.parse(localStorage.getItem('access_token')!),
+    //     "Content-Type": 'multipart/form-data',
+    //   },
+    //   data: formData,
 
-    // const result = await fetchData(PATH, 'post', formData);
-    const result = await axios({
-      method: 'post',
-      url: 'http://localhost:5000' + PATH,
-      headers: {
-        authorization: 'Bearer ' + JSON.parse(localStorage.getItem('access_token')!),
-        "Content-Type": 'multipart/form-data',
-      },
-      data: formData,
-
-    })
-    console.log('result', result)
+    // })
 
     setSelectedFiles([]);
     handleClose();
@@ -103,6 +116,14 @@ export default function ActivityDialog(props: ActivityDialogProps) {
           <div className=''>
             <FileUpload selectedFiles={selectedFiles} setSelectedFiles={setSelectedFiles} />
           </div>
+          <div>
+            No deadline
+            <Checkbox checked={noDeadline} onChange={() => setNoDeadline(!noDeadline)} />
+          </div>
+          
+          <ListItem>
+            { !noDeadline && <Calendar day={deadline} handleDay={setDeadline} />}
+          </ListItem>
         <ListItem disableGutters>
           <ListItemButton
             autoFocus
