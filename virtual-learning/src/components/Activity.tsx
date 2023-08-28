@@ -4,7 +4,7 @@ import Link from 'next/link';
 import * as React from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import Section from './Section';
-import { Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import MuiAccordion, { AccordionProps } from '@mui/material/Accordion';
 import MuiAccordionSummary, { AccordionSummaryProps } from '@mui/material/AccordionSummary';
 import MuiAccordionDetails from '@mui/material/AccordionDetails';
@@ -13,6 +13,8 @@ import { styled } from '@mui/material/styles';
 import ArrowForwardIosSharpIcon from '@mui/icons-material/ArrowForwardIosSharp';
 import { fetchData } from '@/services/fetchData';
 import Image from 'next/image';
+import { Blob, File } from 'buffer';
+import Canvas from './Canvas';
 
 
 interface ActivityProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -75,20 +77,31 @@ const AccordionSummary = styled((props: AccordionSummaryProps) => (
 const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
   padding: theme.spacing(2),
   borderTop: '1px solid rgba(0, 0, 0, .125)',
-  ":hover": {
-    backgroundColor: 'rgb(243, 232, 255, 0.6)'
-  }
 }));
 
+
 export const Activity: React.FC<ActivityProps> =({ activity, handleChange, expanded, setExpanded, handleRemoveActivity }: ActivityProps) => {
-  const [filePath, setFilePath] = React.useState<string>('');
+  const [fileStringArray, setFileStringArray] = React.useState<string[]>([]);
+
+  function toBase64(bufferArray: Buffer[]) {
+    const base64Array = bufferArray.map((buffer) => (
+      new Promise((resolve, reject) => {
+        const fileReader = new FileReader();
+        const formData = new FormData();
+        const blob = new Blob([buffer]);
+
+        // formData.append();
+
+        // fileReader.readAsDataURL(blob);
+      })
+    ))
+  }
 
   async function loadFilesActivity() {
     const REQUEST_PATH = '/files/activities/' + `${activity.uuid}`;
-    const imageBuffer = await fetchData(REQUEST_PATH, 'get');
+    const data = await fetchData(REQUEST_PATH, 'get');
 
-    const base64String = btoa(String.fromCharCode(...new Uint8Array(imageBuffer.data)));
-    setFilePath(base64String);
+    setFileStringArray(data);
   }
 
   React.useEffect(() => {
@@ -117,20 +130,37 @@ export const Activity: React.FC<ActivityProps> =({ activity, handleChange, expan
                   <ClearIcon />
                 </button>
               </div>
+              <div className='flex flex-wrap gap-y-[12px] py-[15px] justify-between items-center w-full max-h-[200px] overflow-y-scroll'>
               {
-                  <div className="w-[30%] flex items-center justify-center relative">
-                    <Image
-                      src={`data:image/png;base64,${filePath}` || '/default_profile.png'}
-                      alt='Uploaded file'
-                      fill={true}
-                      priority
-                    />
-                    {/* <img
-                      src={`data:image/png;base64,${filePath}` || '/default_profile.png'}
-                    /> */}
-                  </div>
+                  fileStringArray.map(({ string, name, type }: any, index) => (
+                    <div
+                      className="w-[calc(50%-5px)] h-full flex items-center border-[1px] border-slate-300 rounded-[8px] overflow-x-hidden"
+                      key={string + index}
+                    >
+                      {
+                        (type === 'png' || type === 'jpg' || type === 'jpeg')
+                        && <Canvas fileString={string} />
+                      }
+                      {
+                        type === 'pdf'
+                        &&
+                        <div className='w-[130px] h-[70px] relative'>
+                          <Image
+                            src={'/default_profile.png'}
+                            alt='Uploaded file'
+                            fill={true}
+                            priority
+                          />
+                        </div>
+                        }
+                      <div className='p-[10px] h-[70px] flex flex-col justify-start'>
+                        <span className='font-semibold text-gray-500'>{ name }</span>
+                      </div>
+                    </div>
+                  ))
                 }
-            </AccordionDetails>
+              </div>
+              </AccordionDetails>
           </Accordion>
   )
 }

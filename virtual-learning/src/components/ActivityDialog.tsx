@@ -60,7 +60,17 @@ export default function ActivityDialog(props: ActivityDialogProps) {
     const formData = new FormData();
     selectedFiles.forEach((file: any) => formData.append('files', file.raw));
 
-    await fetchData(PATH_ACTIVITY, 'post', { title, description, deadline: formatDate(deadline), uuid: activityUUID });
+    await fetchData(
+      PATH_ACTIVITY,
+      'post',
+      {
+        title,
+        description,
+        deadline: formatDate(deadline),
+        uuid: activityUUID,
+        file: formData,
+      }
+    );
     await fetchData(PATH_UPLOAD, 'post', formData);
     // const result = await axios({
     //   method: 'post',

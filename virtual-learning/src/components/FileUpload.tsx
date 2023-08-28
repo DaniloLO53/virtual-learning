@@ -70,7 +70,8 @@ export const FileUpload: React.FC<FileUploadProps> = ({ selectedFiles, setSelect
                 id: uniqid(),
                 filename: file.name,
                 filetype: file.type,
-                fileimage: reader.result,
+                // fileimage: reader.result,
+                fileimage: URL.createObjectURL(file),
                 datetime: file.lastModifiedDate.toLocaleString('en-IN'),
                 filesize: filesizes(file.size)
               }
@@ -139,6 +140,11 @@ export const FileUpload: React.FC<FileUploadProps> = ({ selectedFiles, setSelect
                       fill={true}
                       priority
                     />
+                  {/* <embed
+                    width="250"
+                    height="250"
+                    src={fileimage}
+                  /> */}
                   </div> :
                   <div className=""><i className=""></i></div>
                 }
