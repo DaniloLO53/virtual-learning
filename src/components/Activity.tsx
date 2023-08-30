@@ -15,6 +15,7 @@ import { fetchData } from '@/services/fetchData';
 import Image from 'next/image';
 import { Blob, File } from 'buffer';
 import Canvas from './Canvas';
+import axios from 'axios';
 
 
 interface ActivityProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -82,6 +83,7 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
 
 export const Activity: React.FC<ActivityProps> =({ activity, handleChange, expanded, setExpanded, handleRemoveActivity }: ActivityProps) => {
   const [fileStringArray, setFileStringArray] = React.useState<string[]>([]);
+  const [fileStringToDownload, setFileStringToDownload] = React.useState<string>('');
 
   function toBase64(bufferArray: Buffer[]) {
     const base64Array = bufferArray.map((buffer) => (
@@ -102,6 +104,46 @@ export const Activity: React.FC<ActivityProps> =({ activity, handleChange, expan
     const data = await fetchData(REQUEST_PATH, 'get');
 
     setFileStringArray(data);
+  }
+
+  async function downloadScript(buffer: any) {
+    let anchor = document.createElement("a");
+    document.body.appendChild(anchor);
+    const blob = new Blob([buffer]);
+    let objectUrl = window.URL.createObjectURL(blob as unknown as globalThis.Blob);
+
+    console.log('objectUrl', objectUrl)
+
+    anchor.href = objectUrl;
+    anchor.download = 'some-file.pdf';
+    anchor.click();
+
+    // window.URL.revokeObjectURL(objectUrl);
+  }
+
+  async function downloadFile({ uuid, name, timestamp }: any) {
+    const PATH = `/files/download/${timestamp}_${uuid}_${name}`;
+    console.log(PATH);
+
+    const config = { responseType: 'blob' };
+    const data = await fetchData(PATH, 'get', undefined, undefined, config);
+    console.log('blob data', data)
+
+    const element = document.createElement('a');
+    element.setAttribute('href', `data:application/octet-stream;charset=utf-16le;base64,${data.data}`);
+    element.setAttribute('download', name);
+
+    element.style.display = 'none';
+    document.body.appendChild(element);
+
+    element.click();
+
+    document.body.removeChild(element);
+    // const blob = await data.blob();
+
+    // setFileStringToDownload(data);
+    // downloadScript(data)
+    // console.log('typeof data', blob)
   }
 
   React.useEffect(() => {
@@ -131,32 +173,39 @@ export const Activity: React.FC<ActivityProps> =({ activity, handleChange, expan
                 </button>
               </div>
               <div className='flex flex-wrap gap-y-[12px] py-[15px] justify-between items-center w-full max-h-[200px] overflow-y-scroll'>
-              {
-                  fileStringArray.map(({ string, name, type }: any, index) => (
-                    <div
-                      className="w-[calc(50%-5px)] h-full flex items-center border-[1px] border-slate-300 rounded-[8px] overflow-x-hidden"
+                {
+                  fileStringArray.map(({ string, name, type, uuid, timestamp }: any, index) => (
+                    <button
+                      type='button'
+                      onClick={() => downloadFile({ name, uuid, timestamp })}
                       key={string + index}
+                      className='w-[calc(50%-5px)] h-full border-[1px] border-slate-300 rounded-[8px] overflow-x-hidden'
                     >
-                      {
-                        (type === 'png' || type === 'jpg' || type === 'jpeg')
-                        && <Canvas fileString={string} />
-                      }
-                      {
-                        type === 'pdf'
-                        &&
-                        <div className='w-[130px] h-[70px] relative'>
-                          <Image
-                            src={'/default_profile.png'}
-                            alt='Uploaded file'
-                            fill={true}
-                            priority
-                          />
-                        </div>
+                      <div
+                        className=" w-full flex flex-row items-center"
+                      >
+                        {
+                          (type === 'png' || type === 'jpg' || type === 'jpeg')
+                          && <img src={`data:image/png;base64,${string}`} style={{ width: '100px', height: '70px'}} />
                         }
-                      <div className='p-[10px] h-[70px] flex flex-col justify-start'>
-                        <span className='font-semibold text-gray-500'>{ name }</span>
+                        {
+                          type === 'pdf'
+                          &&
+                          <div className='w-[130px] h-[70px] relative'>
+                            <Image
+                              src={'/default_profile.png'}
+                              alt='Uploaded file'
+                              fill={true}
+                              priority
+                            />
+                          </div>
+                        }
+                        <div className='p-[10px] h-[70px] flex flex-col justify-between items-start '>
+                          <p className='font-semibold text-gray-500 '>{ name }</p>
+                          <p className='font-semibold text-gray-500 '>{ type.toUpperCase() }</p>
+                        </div>
                       </div>
-                    </div>
+                    </button>
                   ))
                 }
               </div>

@@ -2,10 +2,18 @@ import axios from "axios";
 
 type Method = 'get' | 'post' | 'put' | 'delete';
 type Role = 'student' | 'teacher';
-type Args = [path: string, method: Method, payload?: any, signInRole?: Role];
+type Args = [path: string, method: Method, payload?: any, signInRole?: Role, customConfig?: any];
+
+interface Config {
+  headers: {
+    role: Role,
+    authorization: string,
+    responseType?: string
+  }
+}
 
 export async function fetchData(...args: Args) {
-  const [path, method, payload, signInRole] = args;
+  const [path, method, payload, signInRole, customConfig] = args;
   let TOKEN;
   let ROLE;
 
@@ -18,11 +26,14 @@ export async function fetchData(...args: Args) {
   }
 
   const url = (process.env.NEXT_PUBLIC_SERVER_ENDPOINT as string) + `${path}`;
-  const config = {
+  const config: Config = {
     headers: {
       role: signInRole || ROLE,
-      authorization: 'Bearer ' + TOKEN
+      authorization: 'Bearer ' + TOKEN,
     },
+  }
+  if (customConfig) {
+    config.headers =  { responseType: customConfig.responseType, ...config.headers,}
   }
   try {
     let response;
@@ -30,7 +41,10 @@ export async function fetchData(...args: Args) {
       const { data } = await axios[method](url, payload, config);
       response = data;
     } else {
+      console.log('config', config)
       const result = await axios[method](url, config);
+
+      if (customConfig) return result;
       response = result.data;
     }
     console.log('data', response)
