@@ -41,8 +41,10 @@ export async function fetchData(...args: Args) {
       const { data } = await axios[method](url, payload, config);
       response = data;
     } else {
-      console.log('config', config)
       const result = await axios[method](url, config);
+
+      console.log('RESULT', result)
+      console.log('url', url)
 
       if (customConfig) return result;
       response = result.data;

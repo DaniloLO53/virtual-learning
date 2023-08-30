@@ -57,7 +57,12 @@ export function UserProvider({ children }: any): ReactElement {
     if (localStorage.getItem('access_token')) {
       localStorage.removeItem('access_token');
       localStorage.removeItem('role');
-      setUserData({ ...userData, access_token: null });
+      setUserData({
+        id: 0,
+        courses: [],
+        email: '',
+        access_token: ''
+      });
     }
     router.replace('/sign-in');
   }

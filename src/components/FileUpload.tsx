@@ -12,42 +12,6 @@ export type FileUploadProps = {
 }
 
 export const FileUpload: React.FC<FileUploadProps> = ({ selectedFiles, setSelectedFiles }) => {
-    // const stopDefaults = (e: React.DragEvent) => {
-    //   e.stopPropagation()
-    //   e.preventDefault()
-    // }
-    // const dragEvents = {
-      // onMouseEnter: () => {
-      //   setIsMouseOver(true)
-      // },
-      // onMouseLeave: () => {
-      //   setIsMouseOver(false)
-      // },
-      // onDragEnter: (e: React.DragEvent) => {
-      //   stopDefaults(e)
-      //   setIsDragOver(true)
-      //   setLabelText('Drop label')
-      // },
-      // onDragLeave: (e: React.DragEvent) => {
-      //   stopDefaults(e)
-      //   setIsDragOver(false)
-      //   setLabelText('Hover label')
-      // },
-      // onDragOver: stopDefaults,
-      // onDrop: (e: React.DragEvent<HTMLElement>) => {
-      //   console.log('On drop:')
-      //   console.log('imageButton:', imageButton)
-      //   console.log('e.dataTransfer.files', e.dataTransfer.files)
-      //   stopDefaults(e)
-      //   setLabelText('Hover label')
-      //   setIsDragOver(false)
-      //   if (imageButton && e.dataTransfer.files[0]) {
-      //     setImageUrl(URL.createObjectURL(e.dataTransfer.files[0]))
-      //   }
-      //   onDrop(e)
-      // },
-    // }
-
     const filesizes = (bytes: any, decimals = 2) => {
       if (bytes === 0) return '0 Bytes';
       const k = 1024;
@@ -70,7 +34,6 @@ export const FileUpload: React.FC<FileUploadProps> = ({ selectedFiles, setSelect
                 id: uniqid(),
                 filename: file.name,
                 filetype: file.type,
-                // fileimage: reader.result,
                 fileimage: URL.createObjectURL(file),
                 datetime: file.lastModifiedDate.toLocaleString('en-IN'),
                 filesize: filesizes(file.size)

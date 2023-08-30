@@ -15,12 +15,14 @@ import Image from 'next/image';
 import { Blob, File } from 'buffer';
 import axios from 'axios';
 import ActivityAttachDialog from '@/components/ActivityAttachDialog';
+import AssignGradeDialog from '@/components/AssignGradeDialog';
 
 
-interface ActivityDetailsProps extends React.HTMLAttributes<HTMLDivElement> {
+interface SubmitProps extends React.HTMLAttributes<HTMLDivElement> {
   params: {
     activityId: string;
     courseId: string;
+    submissionId: string;
   }
 }
 
@@ -36,32 +38,30 @@ export interface ActivityDto {
 }
 
 
-const ActivityDetails: React.FC<ActivityDetailsProps> =({ params }: ActivityDetailsProps) => {
+const Submit: React.FC<SubmitProps> =({ params }: SubmitProps) => {
   const [fileStringArray, setFileStringArray] = React.useState<string[]>([]);
-  const [activity, setActivity] = React.useState<any>(null);
+  const [submission, setSubmission] = React.useState<any>(null);
   const [open, setOpen] = React.useState(false);
-  const [activityIsDone, setActivityIsDone] = React.useState<any>(null);
+  const [grade, setGrade] = React.useState('');
+  const [description, setDescription] = React.useState('');
 
   const role = JSON.parse(localStorage.getItem('role') || '');
   const { courseId, activityId } = params;
 
-  async function loadActivity() {
-    const ACTIVITY_PATH = `/courses/${courseId}/activities/${activityId}`;
-    const PATH_ACTIVITY_DONE = `/courses/${courseId}/activities/${activityId}/done`;
+  async function loadSubmission() {
+    const ACTIVITY_PATH = `/courses/${courseId}/activities/${activityId}/submissions/${params.submissionId}`;
 
-    const activityFromApi = await fetchData(ACTIVITY_PATH, 'get');
-    const FILE_PATH = '/files/activities/' + `${activityFromApi.uuid}`;
+    const submissionFromApi = await fetchData(ACTIVITY_PATH, 'get');
+    const FILE_PATH = '/files/submissions/' + `${submissionFromApi.uuid}`;
     const filesFromApi = await fetchData(FILE_PATH, 'get');
-    const data = await fetchData(PATH_ACTIVITY_DONE, 'get');
-    console.log('Activity done', data)
+    console.log('Activity done', submissionFromApi);
 
-    data && setActivityIsDone(data);
-    setActivity(activityFromApi);
+    setSubmission(submissionFromApi);
     setFileStringArray(filesFromApi);
   }
 
-  async function downloadFile({ uuid, name, timestamp }: any) {
-    const PATH = `/files/download/${timestamp}_${uuid}_${name}`;
+  async function downloadFile({ activity_uuid, submission_uuid, name, timestamp }: any) {
+    const PATH = `/files/download/submissions/${timestamp}_${activity_uuid}_${submission_uuid}_${name}`;
     console.log(PATH);
 
     const config = { responseType: 'blob' };
@@ -80,13 +80,6 @@ const ActivityDetails: React.FC<ActivityDetailsProps> =({ params }: ActivityDeta
     document.body.removeChild(element);
   }
 
-  async function undoneActivity() {
-    console.log('activityIsDone',activityIsDone)
-    const ACTIVITY_PATH = `/courses/${courseId}/activities/${activityId}/done/${activityIsDone.id}`;
-    await fetchData(ACTIVITY_PATH, 'delete');
-
-    setActivityIsDone(null);
-  }
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -97,33 +90,23 @@ const ActivityDetails: React.FC<ActivityDetailsProps> =({ params }: ActivityDeta
   };
 
   React.useEffect(() => {
-    loadActivity()
-  }, [activityIsDone?.id])
+    loadSubmission()
+  }, [])
   return (
-    activity &&
+    submission &&
       <div className='pt-[80px] flex justify-center'>
-        <div className='w-[60%]'>
-          <div
-            id={`panel${activity.id}d-header`}
-            className='border-b-[1px] border-b-purple-500 py-[15px]'
-          >
-            <h1 className='text-[30px] text-purple-500'>{ activity.title }</h1>
-            <p className='text-slate-500'>Deadline: <span>{ activity.deadline }</span></p>
-          </div>
+        <div className='w-[60%] bg-red-100'>
           <div>
-            <div className='flex items-center justify-between'>
-              <p>{ activity.description }</p>
-            </div>
           <div
             className='flex flex-wrap gap-y-[12px] py-[15px] justify-between items-center
             w-full max-h-[200px] overflow-y-auto'
           >
             {
               fileStringArray
-                .map(({ string, name, type, uuid, timestamp }: any, index) => (
+                .map(({ string, name, type, activity_uuid, submission_uuid, timestamp }: any, index) => (
                 <button
                   type='button'
-                  onClick={() => downloadFile({ name, uuid, timestamp })}
+                  onClick={() => downloadFile({ name, activity_uuid, submission_uuid, timestamp })}
                   key={string + index}
                   className='w-[calc(50%-5px)] h-full border-[1px] border-slate-300
                   rounded-[8px] overflow-x-hidden'
@@ -166,35 +149,24 @@ const ActivityDetails: React.FC<ActivityDetailsProps> =({ params }: ActivityDeta
           <div
             className=''
           >
-            { role === 'student' &&
-              (activityIsDone
-              ?
-                <div>
-                  <p>Activity is done already</p>
-                  <button
-                    type='button'
-                    onClick={undoneActivity}
-                    className=''
-                  >
-                    Undone activity
-                  </button>
-                </div>
-              :
-              <button
+            <button
                 className='p-[10px] text-purple-500 font-bold text-[22px] flex items-center'
                 type='button'
                 onClick={handleClickOpen}
               >
                 <AddIcon />
-                Finish activity
-              </button>)
-            }
-            { activityIsDone?.grade && <p>Grade: <span>{ activityIsDone?.grade }</span></p>}
-            { activityIsDone?.description && <p>Description: <span>{ activityIsDone?.description }</span></p>}
-            <ActivityAttachDialog
+                {<p>{submission.grade ? 'Reassign' : 'Assign'} grade</p>}
+            </button>
+            { submission.grade && <p>Grade: <span>{ submission.grade }</span></p>}
+            { submission.description && <p>Description: <span>{ submission.description }</span></p>}
+            <AssignGradeDialog
               open={open}
               handleClose={handleClose}
-              activityUUID={activity.uuid}
+              activityUUID={submission.activity.uuid}
+              grade={grade}
+              setGrade={setGrade}
+              description={description}
+              setDescription={setDescription}
             />
           </div>
         </div>
@@ -203,4 +175,4 @@ const ActivityDetails: React.FC<ActivityDetailsProps> =({ params }: ActivityDeta
   )
 }
 
-export default ActivityDetails;
+export default Submit;

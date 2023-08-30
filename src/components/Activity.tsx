@@ -84,41 +84,13 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
 export const Activity: React.FC<ActivityProps> =({ activity, handleChange, expanded, setExpanded, handleRemoveActivity }: ActivityProps) => {
   const [fileStringArray, setFileStringArray] = React.useState<string[]>([]);
   const [fileStringToDownload, setFileStringToDownload] = React.useState<string>('');
-
-  function toBase64(bufferArray: Buffer[]) {
-    const base64Array = bufferArray.map((buffer) => (
-      new Promise((resolve, reject) => {
-        const fileReader = new FileReader();
-        const formData = new FormData();
-        const blob = new Blob([buffer]);
-
-        // formData.append();
-
-        // fileReader.readAsDataURL(blob);
-      })
-    ))
-  }
+  const role = JSON.parse(localStorage.getItem('role') || '');
 
   async function loadFilesActivity() {
     const REQUEST_PATH = '/files/activities/' + `${activity.uuid}`;
     const data = await fetchData(REQUEST_PATH, 'get');
 
     setFileStringArray(data);
-  }
-
-  async function downloadScript(buffer: any) {
-    let anchor = document.createElement("a");
-    document.body.appendChild(anchor);
-    const blob = new Blob([buffer]);
-    let objectUrl = window.URL.createObjectURL(blob as unknown as globalThis.Blob);
-
-    console.log('objectUrl', objectUrl)
-
-    anchor.href = objectUrl;
-    anchor.download = 'some-file.pdf';
-    anchor.click();
-
-    // window.URL.revokeObjectURL(objectUrl);
   }
 
   async function downloadFile({ uuid, name, timestamp }: any) {
@@ -208,6 +180,18 @@ export const Activity: React.FC<ActivityProps> =({ activity, handleChange, expan
                     </button>
                   ))
                 }
+              </div>
+              <div
+                className=''
+              >
+                <Link
+                  href={
+                    `/courses/${activity.course_id}/activities/${activity.id}/${role === 'student' ? 'details' : 'submits'}`
+                  }
+                  className='text-purple-400 font-semibold hover:font-bold'
+                >
+                  See activity
+                </Link>
               </div>
               </AccordionDetails>
           </Accordion>
