@@ -1,37 +1,30 @@
 'use client'
 
-import Button from '@/components/Button';
-import { TopBar } from '@/components/TopBar';
 import { UserCourses } from '@/components/UserCourses';
 import { useUserContext } from '@/contexts/userContext';
 import { fetchData } from '@/services/fetchData';
 import { Container } from '@mui/material';
-import axios from 'axios';
 import React, { useEffect } from 'react';
 
 export default function Home() {
   const { userData, setUserData } = useUserContext();
-  const role = JSON.parse(localStorage.getItem('role') || '');
-  const TOKEN = JSON.parse(localStorage.getItem('access_token') || '');
+  const role = JSON.parse(localStorage.getItem('role') || 'null');
+  const TOKEN = JSON.parse(localStorage.getItem('access_token') || 'null');
 
   async function loadUserCourses() {
     const PATH = `/courses/${role === 'student' ? 'registered' : 'created'}`;
-    const coursesFromApi = await fetchData(PATH, 'get');
+    const coursesFromApi = await fetchData({ url: PATH });
 
-    setUserData({ ...userData, courses: coursesFromApi, access_token: TOKEN})
+    setUserData({ ...userData, courses: coursesFromApi })
   }
 
   useEffect(() => {
-    if (TOKEN.length > 0) {
-      loadUserCourses();
-    }
-  }, [userData.courses.length, userData.access_token]);
+    loadUserCourses();
+  }, []);
 
   return (
-    <Container
-      className='pt-topBar'
-    >
-      <UserCourses courses={ userData.courses } />
+    <Container className='pt-topBar'>
+      <UserCourses />
     </Container>
   )
 }

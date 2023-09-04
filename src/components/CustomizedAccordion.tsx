@@ -32,7 +32,7 @@ export default function CustomizedAccordion({ activities }: CustomizedAccordionP
 
   const handleRemoveActivity = async ({ activity_id, course_id }: any) => {
     const PATH = `/courses/${course_id}/activities/${activity_id}`;
-    await fetchData(PATH, 'delete');
+    await fetchData({ url: PATH, method: 'delete' });
   }
 
   return (

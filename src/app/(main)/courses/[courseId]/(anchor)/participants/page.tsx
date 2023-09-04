@@ -30,14 +30,14 @@ export default function Participants({ params }: any) {
   async function loadParticipants() {
     const { courseId } = params;
     const PATH = `/registrations/courses/${courseId}`;
-    const participantsFromApi = await fetchData(PATH, 'get');
+    const participantsFromApi = await fetchData({ url: PATH });
     const { registrations, teacher } = participantsFromApi
     setParticipants({ students: registrations, teacher });
   }
 
   const removeStudent = async (id: any) => {
     const PATH = `/registrations/${id}`;
-    const participantsFromApi = await fetchData(PATH, 'delete');
+    const participantsFromApi = await fetchData({ url: PATH, method: 'delete' });
     setParticipants(participantsFromApi);
   }
 

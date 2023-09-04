@@ -10,7 +10,7 @@ export default function SearchBar({ setCourses, value, setValue }: any) {
   React.useEffect(() => {
     async function fetchDataAsync() {
       const PATH = `/courses/query/?query=${value}`;
-      const coursesFromApi = await fetchData(PATH, 'get');
+      const coursesFromApi = await fetchData({ url: PATH });
       setCourses(coursesFromApi);
     }
 

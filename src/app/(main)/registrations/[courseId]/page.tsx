@@ -32,7 +32,7 @@ export default function RegistrateToCourse(
 
   async function loadCourse() {
     const PATH = `/courses/${params.courseId}/registration`;
-    const courseFromApi = await fetchData(PATH, 'get');
+    const courseFromApi = await fetchData({ url: PATH });
     setCourse(courseFromApi);
   }
 
@@ -42,7 +42,7 @@ export default function RegistrateToCourse(
     let payload: any = { course_id: Number(courseId) };
     if (course?.password) payload = { ...payload, password }
 
-    await fetchData(PATH, 'post', payload);
+    await fetchData({ url: PATH, method: 'post', payload });
     router.replace(`/courses/${courseId}/board`);
   }
 

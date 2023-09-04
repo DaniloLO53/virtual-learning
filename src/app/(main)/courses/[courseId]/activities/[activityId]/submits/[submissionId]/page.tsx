@@ -51,9 +51,9 @@ const Submit: React.FC<SubmitProps> =({ params }: SubmitProps) => {
   async function loadSubmission() {
     const ACTIVITY_PATH = `/courses/${courseId}/activities/${activityId}/submissions/${params.submissionId}`;
 
-    const submissionFromApi = await fetchData(ACTIVITY_PATH, 'get');
+    const submissionFromApi = await fetchData({ url: ACTIVITY_PATH });
     const FILE_PATH = '/files/submissions/' + `${submissionFromApi.uuid}`;
-    const filesFromApi = await fetchData(FILE_PATH, 'get');
+    const filesFromApi = await fetchData({ url: FILE_PATH });
     console.log('Activity done', submissionFromApi);
 
     setSubmission(submissionFromApi);
@@ -64,8 +64,8 @@ const Submit: React.FC<SubmitProps> =({ params }: SubmitProps) => {
     const PATH = `/files/download/submissions/${timestamp}_${activity_uuid}_${submission_uuid}_${name}`;
     console.log(PATH);
 
-    const config = { responseType: 'blob' };
-    const data = await fetchData(PATH, 'get', undefined, undefined, config);
+    const headers = { responseType: 'blob' };
+    const data = await fetchData({ headers, url: PATH });
     console.log('blob data', data)
 
     const element = document.createElement('a');

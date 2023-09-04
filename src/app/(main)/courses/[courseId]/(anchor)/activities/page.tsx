@@ -42,7 +42,7 @@ export default function Activities({ params }: any) {
   async function loadActivities() {
     const { courseId } = params;
     const PATH = `/courses/${courseId}/activities`;
-    const activitiesFromApi = await fetchData(PATH, 'get');
+    const activitiesFromApi = await fetchData({ url: PATH });
     console.log(activitiesFromApi)
     setActivities(activitiesFromApi);
   }

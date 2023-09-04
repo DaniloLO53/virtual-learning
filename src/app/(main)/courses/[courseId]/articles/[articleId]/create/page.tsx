@@ -30,7 +30,7 @@ export default function CreateSection({ params }: ArticleParams) {
     const sectionContent = document.getElementById('editor-input')?.innerHTML;
     let payload: any = { content: sectionContent, title };
     const PATH = `/articles/${params.articleId}`;
-    await fetchData(PATH, 'post', payload);
+    await fetchData({ url: PATH, method: 'post', payload });
     router.back();
   }
 

@@ -49,13 +49,13 @@ export default function Board({ params }: BoardParams) {
   async function handlePublishArticle() {
     const PATH = '/articles';
     let payload: any = { title, description, course_id: Number(params.courseId) };
-    await fetchData(PATH, 'post', payload);
+    await fetchData({ url: PATH, method: 'post' });
     handleClose();
   }
 
   async function loadArticles() {
     const PATH = `/articles/course/${params.courseId}`;
-    const articlesFromApi = await fetchData(PATH, 'get');
+    const articlesFromApi = await fetchData({ url: PATH });
     setArticles(articlesFromApi);
   }
 

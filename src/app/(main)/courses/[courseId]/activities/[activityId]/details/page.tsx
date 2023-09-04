@@ -49,10 +49,10 @@ const ActivityDetails: React.FC<ActivityDetailsProps> =({ params }: ActivityDeta
     const ACTIVITY_PATH = `/courses/${courseId}/activities/${activityId}`;
     const PATH_ACTIVITY_DONE = `/courses/${courseId}/activities/${activityId}/done`;
 
-    const activityFromApi = await fetchData(ACTIVITY_PATH, 'get');
+    const activityFromApi = await fetchData({ url: ACTIVITY_PATH });
     const FILE_PATH = '/files/activities/' + `${activityFromApi.uuid}`;
-    const filesFromApi = await fetchData(FILE_PATH, 'get');
-    const data = await fetchData(PATH_ACTIVITY_DONE, 'get');
+    const filesFromApi = await fetchData({ url: FILE_PATH });
+    const data = await fetchData({ url: PATH_ACTIVITY_DONE });
     console.log('Activity done', data)
 
     data && setActivityIsDone(data);
@@ -64,8 +64,8 @@ const ActivityDetails: React.FC<ActivityDetailsProps> =({ params }: ActivityDeta
     const PATH = `/files/download/${timestamp}_${uuid}_${name}`;
     console.log(PATH);
 
-    const config = { responseType: 'blob' };
-    const data = await fetchData(PATH, 'get', undefined, undefined, config);
+    const headers = { responseType: 'blob' };
+    const data = await fetchData({ headers, url: PATH });
     console.log('blob data', data)
 
     const element = document.createElement('a');
@@ -83,7 +83,7 @@ const ActivityDetails: React.FC<ActivityDetailsProps> =({ params }: ActivityDeta
   async function undoneActivity() {
     console.log('activityIsDone',activityIsDone)
     const ACTIVITY_PATH = `/courses/${courseId}/activities/${activityId}/done/${activityIsDone.id}`;
-    await fetchData(ACTIVITY_PATH, 'delete');
+    await fetchData({ url: ACTIVITY_PATH, method: 'delete' });
 
     setActivityIsDone(null);
   }

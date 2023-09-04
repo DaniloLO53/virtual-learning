@@ -16,7 +16,7 @@ export default function TemporaryDrawer() {
   const [state, setState] = React.useState(false);
   const [value, setValue] = React.useState('');
   const [courses, setCourses] = React.useState([]);
-  const isStudent = JSON.parse(localStorage.getItem('role') || '') === 'student';
+  const isStudent = JSON.parse(localStorage.getItem('role') || 'null') === 'student';
 
   const toggleDrawer =
     (open: boolean) =>

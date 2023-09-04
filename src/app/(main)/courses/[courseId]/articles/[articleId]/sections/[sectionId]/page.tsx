@@ -25,13 +25,13 @@ export default function Section({ params }: SectionParams) {
 
   const removeSection = async (id: any) => {
     const PATH = `/articles/sections/${id}`;
-    await fetchData(PATH, 'delete');
+    await fetchData({ url: PATH, method: 'delete' });
     router.back();
   }
 
   async function loadSection() {
     const PATH = `/articles/sections/${params.sectionId}`;
-    const sectionFromApi = await fetchData(PATH, 'get');
+    const sectionFromApi = await fetchData({ url: PATH });
     const parser = new DOMParser();
     const document = parser.parseFromString(sectionFromApi.content, "text/html");
     const content = document.body;

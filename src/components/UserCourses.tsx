@@ -1,13 +1,15 @@
+import { useUserContext } from "@/contexts/userContext";
 import { Grid } from "@mui/material";
 import { StudentCourseCard } from "./StudentCourseCard";
 import { TeacherCourseCard } from "./TeacherCourseCard";
 
-export const UserCourses = ({ courses }: any) => {
-  const role = JSON.parse(localStorage.getItem('role') || '');
+export const UserCourses = () => {
+  const role = JSON.parse(localStorage.getItem('role') || 'null');
+  const { userData } = useUserContext();
 
   const coursesList = () => {
     if (role) {
-      return courses.map((course: any) => (
+      return userData.courses.map((course: any) => (
         role === 'student'
         ? <StudentCourseCard course={course} key={course.id}/>
         : <TeacherCourseCard course={course} key={course.id}/>
@@ -28,7 +30,7 @@ export const UserCourses = ({ courses }: any) => {
       container
     >
       {
-        !courses || courses.length === 0
+        !userData.courses || userData.courses.length === 0
         ? <p>You&#39;re not assigned to any course yet</p>
         : coursesList()
       }

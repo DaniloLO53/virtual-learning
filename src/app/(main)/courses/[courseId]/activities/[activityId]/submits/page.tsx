@@ -22,7 +22,7 @@ export default function ActivitySubmits({ params }: ActivitySubmitsProps) {
   async function loadSubmits() {
     const { courseId, activityId } = params;
     const PATH = `/courses/${courseId}/activities/${activityId}/submits`;
-    const submitsFromApi = await fetchData(PATH, 'get');
+    const submitsFromApi = await fetchData({ url: PATH });
     console.log('SUBMITS', submitsFromApi)
     setSubmits(submitsFromApi);
   }

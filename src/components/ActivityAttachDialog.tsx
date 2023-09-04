@@ -44,13 +44,10 @@ export default function ActivityAttachDialog(props: ActivityAttachDialogProps) {
     const PATH_ACTIVITY = `/courses/${courseId}/activities/${activityId}`;
     const formData = new FormData();
     selectedFiles.forEach((file: any) => formData.append('files', file.raw));
+    const payload = { uuid: submissionUUID, file: formData };
 
-    await fetchData(
-      PATH_ACTIVITY,
-      'post',
-      { uuid: submissionUUID, file: formData }
-    );
-    await fetchData(PATH_UPLOAD, 'post', formData);
+    await fetchData({ url: PATH_ACTIVITY, method: 'post', payload });
+    await fetchData({ url: PATH_UPLOAD, method: 'post', payload: formData });
     
     setSelectedFiles([]);
     handleClose();

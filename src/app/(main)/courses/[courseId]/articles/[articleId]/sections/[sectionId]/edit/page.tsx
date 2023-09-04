@@ -24,13 +24,13 @@ export default function EditSection({ params }: SectionParams) {
     const sectionContent = document.getElementById('editor-input')?.innerHTML;
     let payload: any = { content: sectionContent, title };
     const PATH = `/articles/sections/${params.sectionId}`;
-    await fetchData(PATH, 'put', payload);
+    await fetchData({ url: PATH, method: 'put', payload });
     router.back();
   }
 
   async function loadSection() {
     const PATH = `/articles/sections/${params.sectionId}`;
-    const sectionFromApi = await fetchData(PATH, 'get');
+    const sectionFromApi = await fetchData({ url: PATH });
     const parser = new DOMParser();
     const document = parser.parseFromString(sectionFromApi.content, "text/html");
     const content = document.body;

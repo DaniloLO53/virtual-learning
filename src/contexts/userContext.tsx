@@ -37,16 +37,21 @@ export function UserProvider({ children }: any): ReactElement {
 
   async function signUpHandler(signUpData: SignUpData) {
     const PATH = '/auth/sign-up';
-    await fetchData(PATH, 'post', signUpData);
+    await fetchData({ url: PATH, method: 'post', payload: signUpData });
     router.push('/sign-in');
   }
 
   async function signInHandler(signInData: SignInData, role: Role) {
     const PATH = '/auth/sign-in';
-    const data = await fetchData(PATH, 'post', signInData, role);
+    const { data } = await axios({
+      url: (process.env.NEXT_PUBLIC_SERVER_ENDPOINT as string) + PATH,
+      method: 'post',
+      data: signInData,
+      headers: {
+        role,
+      }
+    })
 
-    console.log('LOGIN', data)
-  
     localStorage.setItem('access_token', JSON.stringify(data.access_token));
     localStorage.setItem('role', JSON.stringify(data.role));
     setUserData({ ...userData, access_token: data.access_token });

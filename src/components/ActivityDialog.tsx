@@ -59,19 +59,16 @@ export default function ActivityDialog(props: ActivityDialogProps) {
     const PATH_ACTIVITY = `/courses/${courseId}/activities`;
     const formData = new FormData();
     selectedFiles.forEach((file: any) => formData.append('files', file.raw));
+    const payload = {
+      title,
+      description,
+      deadline: formatDate(deadline),
+      uuid: activityUUID,
+      file: formData,
+    }
 
-    await fetchData(
-      PATH_ACTIVITY,
-      'post',
-      {
-        title,
-        description,
-        deadline: formatDate(deadline),
-        uuid: activityUUID,
-        file: formData,
-      }
-    );
-    await fetchData(PATH_UPLOAD, 'post', formData);
+    await fetchData({ url: PATH_ACTIVITY, method: 'post', payload });
+    await fetchData({ url: PATH_UPLOAD, method: 'post', payload: formData });
     // const result = await axios({
     //   method: 'post',
     //   url: 'http://localhost:5000' + PATH,

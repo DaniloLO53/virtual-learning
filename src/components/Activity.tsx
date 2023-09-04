@@ -84,11 +84,11 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
 export const Activity: React.FC<ActivityProps> =({ activity, handleChange, expanded, setExpanded, handleRemoveActivity }: ActivityProps) => {
   const [fileStringArray, setFileStringArray] = React.useState<string[]>([]);
   const [fileStringToDownload, setFileStringToDownload] = React.useState<string>('');
-  const role = JSON.parse(localStorage.getItem('role') || '');
+  const role = JSON.parse(localStorage.getItem('role') || 'null');
 
   async function loadFilesActivity() {
     const REQUEST_PATH = '/files/activities/' + `${activity.uuid}`;
-    const data = await fetchData(REQUEST_PATH, 'get');
+    const data = await fetchData({ url: REQUEST_PATH });
 
     setFileStringArray(data);
   }
@@ -97,8 +97,8 @@ export const Activity: React.FC<ActivityProps> =({ activity, handleChange, expan
     const PATH = `/files/download/${timestamp}_${uuid}_${name}`;
     console.log(PATH);
 
-    const config = { responseType: 'blob' };
-    const data = await fetchData(PATH, 'get', undefined, undefined, config);
+    const headers = { responseType: 'blob' };
+    const data = await fetchData({ url: PATH, headers });
     console.log('blob data', data)
 
     const element = document.createElement('a');

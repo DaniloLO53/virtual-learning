@@ -44,8 +44,9 @@ export default function AssignGradeDialog(props: AssignGradeDialogProps) {
     const { courseId, activityId, submissionId } = params;
     const { grade, description } = props;
     const PATH = `/courses/${courseId}/activities/${activityId}/submissions/${submissionId}/grade`;
+    const payload = { grade, description };
 
-    await fetchData(PATH, 'put', { grade, description });
+    await fetchData({ url: PATH, method: 'put', payload });
     
     handleClose();
   }
