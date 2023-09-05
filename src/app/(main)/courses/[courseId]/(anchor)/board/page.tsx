@@ -8,6 +8,7 @@ import SimpleDialog from '@/components/ActivityDialog';
 import { fetchData } from '@/services/fetchData';
 import { Article } from '@/components/Article';
 import ArticleDialog from '@/components/ArticleDialog';
+import { Box } from '@mui/material';
 
 interface BoardParams {
   params: {
@@ -49,7 +50,7 @@ export default function Board({ params }: BoardParams) {
   async function handlePublishArticle() {
     const PATH = '/articles';
     let payload: any = { title, description, course_id: Number(params.courseId) };
-    await fetchData({ url: PATH, method: 'post' });
+    await fetchData({ url: PATH, method: 'post', payload });
     handleClose();
   }
 
@@ -61,10 +62,11 @@ export default function Board({ params }: BoardParams) {
 
   React.useEffect(() => {
     loadArticles();
-  }, [open])
+  }, [open]);
+
   return (
-    <div className='my-[100px] w-full flex flex-col items-center'>
-      <div className='w-[60%] flex flex-col items-start pt-[20px]'>
+    <Box className='my-[100px] w-full flex flex-col items-center'>
+      <Box className='w-[60%] flex flex-col items-start pt-[20px]'>
         { role === 'teacher' &&
           <button
             className='p-[10px] text-purple-500 font-bold text-[22px] flex items-center'
@@ -95,7 +97,7 @@ export default function Board({ params }: BoardParams) {
             courseId={params.courseId}
           />
         ))}
-      </div>
-    </div>
+      </Box>
+    </Box>
   )
 }

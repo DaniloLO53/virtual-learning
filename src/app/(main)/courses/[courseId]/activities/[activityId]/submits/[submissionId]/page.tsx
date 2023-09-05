@@ -91,11 +91,11 @@ const Submit: React.FC<SubmitProps> =({ params }: SubmitProps) => {
 
   React.useEffect(() => {
     loadSubmission()
-  }, [])
+  }, [submission?.grade])
   return (
     submission &&
       <div className='pt-[80px] flex justify-center'>
-        <div className='w-[60%] bg-red-100'>
+        <div className='w-[60%]'>
           <div>
           <div
             className='flex flex-wrap gap-y-[12px] py-[15px] justify-between items-center
@@ -167,6 +167,7 @@ const Submit: React.FC<SubmitProps> =({ params }: SubmitProps) => {
               setGrade={setGrade}
               description={description}
               setDescription={setDescription}
+              setSubmission={setSubmission}
             />
           </div>
         </div>

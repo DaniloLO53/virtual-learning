@@ -15,6 +15,7 @@ import Image from 'next/image';
 import { Blob, File } from 'buffer';
 import axios from 'axios';
 import ActivityAttachDialog from '@/components/ActivityAttachDialog';
+import Button from '@/components/Button';
 
 
 interface ActivityDetailsProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -164,20 +165,20 @@ const ActivityDetails: React.FC<ActivityDetailsProps> =({ params }: ActivityDeta
             }
           </div>
           <div
-            className=''
+            className='w-[25%]'
           >
             { role === 'student' &&
               (activityIsDone
               ?
                 <div>
-                  <p>Activity is done already</p>
-                  <button
+                  <Typography className='my-[10px]'>Activity is done already</Typography>
+                  <Button
                     type='button'
                     onClick={undoneActivity}
                     className=''
                   >
                     Undone activity
-                  </button>
+                  </Button>
                 </div>
               :
               <button
@@ -189,12 +190,14 @@ const ActivityDetails: React.FC<ActivityDetailsProps> =({ params }: ActivityDeta
                 Finish activity
               </button>)
             }
+            { activityIsDone && !activityIsDone.grade && <p>Submission not graded yet</p>}
             { activityIsDone?.grade && <p>Grade: <span>{ activityIsDone?.grade }</span></p>}
             { activityIsDone?.description && <p>Description: <span>{ activityIsDone?.description }</span></p>}
             <ActivityAttachDialog
               open={open}
               handleClose={handleClose}
               activityUUID={activity.uuid}
+              setActivityIsDone={setActivityIsDone}
             />
           </div>
         </div>

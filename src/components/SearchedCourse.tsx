@@ -1,4 +1,4 @@
-import { Box, ListItem, ListItemButton, Stack } from '@mui/material';
+import { Box, ListItem, ListItemButton, Stack, Typography } from '@mui/material';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import * as React from 'react';
@@ -13,14 +13,14 @@ export default function SearchedCourse({ course, setState }: any) {
         onClick={() => setState(false)}
       >
         <Stack>
-          <p className='flex text-[18px]'>{ title }</p>
-          <Box>
+          <Typography className='flex text-[18px]'>{ title }</Typography>
+          <Typography>
             <span>{ code }</span>
             <span className='text-[14px]'>
               &nbsp; &#8226; &nbsp;
             </span>
             <span>{ teacher.email }</span>
-          </Box>
+          </Typography>
         </Stack>
       </Link>
     </ListItem>

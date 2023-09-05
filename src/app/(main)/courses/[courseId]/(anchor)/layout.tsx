@@ -1,7 +1,6 @@
 "use client"
 
 import { CourseTopBar } from '@/components/CourseTopBar';
-import { usePathname } from 'next/navigation';
 import * as React from 'react';
 
 interface CourseLayoutProps {
@@ -11,13 +10,11 @@ interface CourseLayoutProps {
   }
 }
 
-export default function CourseLayout(
-{ children, params }: CourseLayoutProps) {
-
+export default function CourseLayout({ children, params }: CourseLayoutProps) {
   return (
-    <>
+    <React.Fragment>
       <CourseTopBar courseId={ params.courseId } />
       { children }
-    </>
+    </React.Fragment>
   )
 }

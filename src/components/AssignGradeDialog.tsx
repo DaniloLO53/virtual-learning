@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -7,15 +6,11 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import DialogTitle from '@mui/material/DialogTitle';
-import Dialog from '@mui/material/Dialog';
 import AddIcon from '@mui/icons-material/Add';
-import { styled, TextField, TextareaAutosize, Box, Checkbox } from '@mui/material';
-import { FileUpload, FileUploadProps } from './FileUpload';
+import { TextField, TextareaAutosize } from '@mui/material';
 import { useParams } from 'next/navigation';
 import { fetchData } from '@/services/fetchData';
-import axios from 'axios';
-import Calendar from './Calendar';
-import { v4 as uuidv4 } from 'uuid';
+import BasicDialog from './BasicDialog';
 
 export interface AssignGradeDialogProps {
   open: boolean;
@@ -25,19 +20,11 @@ export interface AssignGradeDialogProps {
   setGrade: any;
   description: string;
   setDescription: any;
+  setSubmission: any;
 }
 
-const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-  '& .MuiDialogContent-root': {
-    // padding: theme.spacing(20),
-  },
-  '& .MuiDialogActions-root': {
-    // padding: theme.spacing(20),
-  },
-}));
-
 export default function AssignGradeDialog(props: AssignGradeDialogProps) {
-  const { handleClose, open } = props;
+  const { handleClose, open, setSubmission } = props;
   const params = useParams();
 
   async function handleAssignGrade(event: React.MouseEvent) {
@@ -46,21 +33,14 @@ export default function AssignGradeDialog(props: AssignGradeDialogProps) {
     const PATH = `/courses/${courseId}/activities/${activityId}/submissions/${submissionId}/grade`;
     const payload = { grade, description };
 
-    await fetchData({ url: PATH, method: 'put', payload });
-    
+    const gradeAssignment = await fetchData({ url: PATH, method: 'put', payload });
+    console.log('gradeAssignment', gradeAssignment)
+    setSubmission();
     handleClose();
   }
-  
 
   return (
-    <BootstrapDialog
-      onClose={handleClose}
-      open={open}
-      fullWidth={true}
-      maxWidth='md'
-      sx={{
-      }}
-    >
+    <BasicDialog onClose={handleClose} open={open} >
       <DialogTitle>Set your assignment infos</DialogTitle>
       <List
         sx={{ pt: 0, paddingX: '20px' }}
@@ -69,7 +49,8 @@ export default function AssignGradeDialog(props: AssignGradeDialogProps) {
         <ListItem disableGutters>
             <TextField
               id="outlined-basic"
-              label="Title"
+              label="Grade"
+              type='number'
               variant="outlined"
               value={props.grade}
               onChange={({ target }) => props.setGrade(target.value)}
@@ -101,6 +82,6 @@ export default function AssignGradeDialog(props: AssignGradeDialogProps) {
           </ListItemButton>
         </ListItem>
       </List>
-    </BootstrapDialog>
+    </BasicDialog>
   );
 }

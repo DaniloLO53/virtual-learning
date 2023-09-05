@@ -7,10 +7,9 @@ import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
 import DialogTitle from '@mui/material/DialogTitle';
-import Dialog from '@mui/material/Dialog';
 import AddIcon from '@mui/icons-material/Add';
-import { styled, TextField, TextareaAutosize, Box } from '@mui/material';
-import { FileUpload, FileUploadProps } from './FileUpload';
+import { TextField, TextareaAutosize } from '@mui/material';
+import BasicDialog from './BasicDialog';
 
 export interface ArticleDialogProps {
   open: boolean;
@@ -22,27 +21,11 @@ export interface ArticleDialogProps {
   handlePublishArticle: any;
 }
 
-const BootstrapDialog = styled(Dialog)(({ theme }) => ({
-  '& .MuiDialogContent-root': {
-    // padding: theme.spacing(20),
-  },
-  '& .MuiDialogActions-root': {
-    // padding: theme.spacing(20),
-  },
-}));
-
 export default function ArticleDialog(props: ArticleDialogProps) {
   const { onClose, open, handlePublishArticle } = props;
 
   return (
-    <BootstrapDialog
-      onClose={onClose}
-      open={open}
-      fullWidth={true}
-      maxWidth='md'
-      sx={{
-      }}
-    >
+    <BasicDialog onClose={onClose} open={open}>
       <DialogTitle>Set your content infos</DialogTitle>
       <List
         sx={{ pt: 0, paddingX: '20px' }}
@@ -84,6 +67,6 @@ export default function ArticleDialog(props: ArticleDialogProps) {
           </ListItemButton>
         </ListItem>
       </List>
-    </BootstrapDialog>
+    </BasicDialog>
   );
 }

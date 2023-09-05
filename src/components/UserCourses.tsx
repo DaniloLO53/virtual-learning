@@ -17,15 +17,8 @@ export const UserCourses = () => {
     }
   }
 
-  const wrapperStyle = () => (
-    role === 'student'
-    ? `w-[85%] absolute top-[55px] flex flex-wrap gap-x-[45px] gap-y-[65px] items-start
-      py-[20px]`
-    : `w-[50%] absolute top-[55px] flex flex-col divide-y divide-slate-300`
-  )
   return (
     <Grid 
-      // className={wrapperStyle()}
       className='flex flex-wrap gap-x-[40px] gap-y-[65px] py-[20px]'
       container
     >

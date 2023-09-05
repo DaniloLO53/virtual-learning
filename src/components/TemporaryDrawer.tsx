@@ -3,13 +3,11 @@ import Drawer from '@mui/material/Drawer';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchBar from './SearchBar';
 import SearchedCourses from './SearchedCourses';
-import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 import { useUserContext } from '@/contexts/userContext';
 import LogoutIcon from '@mui/icons-material/Logout';
 import Link from 'next/link';
-import { Box, Container, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Stack } from '@mui/material';
-import StaticIcon, { IconNames, Icons } from './StaticIcon';
+import { IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Stack, Typography } from '@mui/material';
+import StaticIcon, { IconNames } from './StaticIcon';
 
 export default function TemporaryDrawer() {
   const { signOutHandler } = useUserContext();
@@ -35,7 +33,7 @@ export default function TemporaryDrawer() {
     };
 
   return (
-    <>
+    <React.Fragment>
       <Stack direction='row'>
         <IconButton
           aria-label="open drawer"
@@ -54,11 +52,7 @@ export default function TemporaryDrawer() {
       >
         {
           isStudent &&
-          <SearchBar
-            setCourses={setCourses}
-            value={value}
-            setValue={setValue} 
-          />
+          <SearchBar setCourses={setCourses} value={value} setValue={setValue} />
         }
           {
             courses.length > 0
@@ -70,7 +64,7 @@ export default function TemporaryDrawer() {
             courses.length === 0
             && value.length !== 0
             && isStudent
-            && <p className='px-[8px]'>No results</p>
+            && <Typography className='px-[8px]'>No results</Typography>
           }
           <List>
             <ListItem>
@@ -83,6 +77,6 @@ export default function TemporaryDrawer() {
             </ListItem>
           </List>
       </Drawer>
-    </>
+    </React.Fragment>
   );
 }

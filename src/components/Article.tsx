@@ -4,6 +4,7 @@ import Link from 'next/link';
 import * as React from 'react';
 import AddIcon from '@mui/icons-material/Add';
 import Section from './Section';
+import { Box, List, Typography } from '@mui/material';
 
 
 interface ArticleProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -24,17 +25,17 @@ export const Article: React.FC<ArticleProps> =({
     role
 }: ArticleProps) => {
   return (
-    <div
+    <Box
       className='w-full'
       key={'article-'+ article_id}
     >
-      <div className='p-[10px] flex flex-col border-b-[1px] border-b-purple-600'>
-        <h2 className='text-[30px] text-purple-600 font-semibold'>{ title }</h2>
-        <p>{ description }</p>
-      </div>
+      <Box className='p-[10px] flex flex-col border-b-[1px] border-b-purple-600'>
+        <Typography fontSize='30px' className='text-purple-600 font-semibold'>{ title }</Typography>
+        <Typography>{ description }</Typography>
+      </Box>
       <>
         { role === 'teacher' &&
-          <div className='flex'>
+          <Box className='flex'>
             <Link
               href={`/courses/${courseId}/articles/${article_id}/create`}
               className='p-[10px] text-purple-500 font-bold flex items-center'
@@ -42,9 +43,9 @@ export const Article: React.FC<ArticleProps> =({
               <AddIcon />
               New section
             </Link>
-          </div>
+          </Box>
         }
-        <ul
+        <List
           className='flex flex-col divide-y divide-slate-200'
           role='list'
         >
@@ -59,8 +60,8 @@ export const Article: React.FC<ArticleProps> =({
               updated_at={updated_at}
             />
           ))}
-        </ul>
+        </List>
       </>
-    </div>
+    </Box>
   )
 }

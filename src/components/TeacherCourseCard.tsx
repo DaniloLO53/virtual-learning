@@ -1,30 +1,39 @@
 'use client'
 
+import { Box, Grid, Typography } from '@mui/material';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import * as React from 'react';
+import { Course } from './StudentCourseCard';
 
-export const TeacherCourseCard = ({ course }: any) => {
+export interface TeacherCourseCardProps {
+  course: Course
+}
+
+export const TeacherCourseCard = ({ course }: TeacherCourseCardProps) => {
   const { title, code, id } = course;
   const router = useRouter();
 
-  function handleGoToCourse() {
-    router.replace(`/courses/${id}/board`);
-  }
-
   return (
-    <button
+    <Link
       className='p-[15px]'
-      type='button'
-      onClick={handleGoToCourse}
+      href={`/courses/${id}/board`}
     >
-      <div className='w-[40%] flex flex-col items-start'>
-        <h2 className='w-full text-[20px] truncate text-left'>
-          { title }
-        </h2>
-        <p className='text-[12px]'>
-          { code }
-        </p>
-      </div>
-    </button>
+      <Grid
+        className='w-[310px] h-[280px] border-slate-300 border-[1px] rounded-t-[35px] rounded-b-[10px]'
+      >
+        <Box
+          className='rounded-t-[35px] h-[25%] py-[8px] pl-[25px] border-b-slate-300
+          border-b-[1px] flex flex-col justify-between'
+        >
+          <Typography className='w-full text-[20px] truncate text-left'>
+            { title }
+          </Typography>
+          <Typography className='text-[12px]'>
+            { code }
+          </Typography>
+        </Box>
+      </Grid>
+    </Link>
   )
 }
