@@ -35,9 +35,16 @@ export function UserProvider({ children }: any): ReactElement {
   });
   const router = useRouter();
 
-  async function signUpHandler(signUpData: SignUpData) {
+  async function signUpHandler(signUpData: SignUpData, role: Role) {
     const PATH = '/auth/sign-up';
-    await fetchData({ url: PATH, method: 'post', payload: signUpData });
+    await axios({
+      url: (process.env.NEXT_PUBLIC_SERVER_ENDPOINT as string) + PATH,
+      method: 'post',
+      data: signUpData,
+      headers: {
+        role,
+      }
+    })
     router.push('/sign-in');
   }
 

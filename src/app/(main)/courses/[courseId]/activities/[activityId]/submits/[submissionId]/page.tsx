@@ -1,20 +1,9 @@
 'use client'
 
-import Link from 'next/link';
 import * as React from 'react';
 import AddIcon from '@mui/icons-material/Add';
-import { Box, Typography } from '@mui/material';
-import MuiAccordion, { AccordionProps } from '@mui/material/Accordion';
-import MuiAccordionSummary, { AccordionSummaryProps } from '@mui/material/AccordionSummary';
-import MuiAccordionDetails from '@mui/material/AccordionDetails';
-import ClearIcon from '@mui/icons-material/Clear';
-import { styled } from '@mui/material/styles';
-import ArrowForwardIosSharpIcon from '@mui/icons-material/ArrowForwardIosSharp';
 import { fetchData } from '@/services/fetchData';
 import Image from 'next/image';
-import { Blob, File } from 'buffer';
-import axios from 'axios';
-import ActivityAttachDialog from '@/components/ActivityAttachDialog';
 import AssignGradeDialog from '@/components/AssignGradeDialog';
 
 

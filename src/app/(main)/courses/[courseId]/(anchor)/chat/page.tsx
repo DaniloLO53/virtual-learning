@@ -4,6 +4,8 @@ import * as React from 'react';
 import SendIcon from '@mui/icons-material/Send';
 import { fetchData } from '@/services/fetchData';
 import {socketService} from '../../../../../../services/socketService'
+import { useWebSocketContext } from '@/contexts/webSocketContext';
+import { List, ListItem, ListItemText } from '@mui/material';
 
 interface ChatParams {
   params: {
@@ -17,30 +19,30 @@ interface MessageProps {
 
 export default function Chat({ params }: ChatParams) {
   const [message, setMessage] = React.useState<MessageProps | null>(null);
-  const [messages, setMessages] = React.useState<any[]>([]);
+  const [messages, setMessages] = React.useState<MessageProps[]>([]);
+  const { socket } = useWebSocketContext();
 
-  async function loadMessages() {
+  async function subscribeMessages() {
     const { courseId } = params;
-    console.log('courseId from chat', courseId)
     const TOKEN = JSON.parse(localStorage.getItem('access_token') || '');
     const URL = (process.env.NEXT_PUBLIC_SERVER_ENDPOINT as string) + `/courses/${courseId}/registration`;
-    const config = {
-      headers: {
-        role: 'student',
-        authorization: 'Bearer ' + TOKEN
-      },
+    
+    socket.on('connected', () => console.log('Connected'));
+    socket.on('onMessage', (data) => {
+      console.log('Data from onMessage', data);
+      setMessages((prevState) => [ ...prevState, data ]);
+    })
+    
+    return () => {
+      socket.off('connected');
+      socket.off('onMessage');
+      console.log('Unregistered events');
     }
   }
   
   async function handleSendMessage(event: any) {
-    const PATH = (process.env.NEXT_PUBLIC_SERVER_ENDPOINT as string) + `/courses/${params.courseId}/messages`;
-    // const socket = await io.connect('http://localhost:3001');
-
-    // const messageFromApi = await fetchData(PATH, 'post', message);
-
-    const x = socketService.sendMessage(message);
-    console.log('X', x);
-
+    message?.content && socket.emit('message', message?.content);
+    setMessage(null);
   }
 
   async function handleWriteMessage(event: any) {
@@ -49,7 +51,7 @@ export default function Chat({ params }: ChatParams) {
   }
 
   React.useEffect(() => {
-    loadMessages();
+    subscribeMessages();
   }, [])
   return (
     <div
@@ -58,6 +60,20 @@ export default function Chat({ params }: ChatParams) {
       <div
         className='w-[60%] flex flex-col relative items-center bg-red-100 min-h-[calc(100vh-200px)]'
       >
+        <List>
+          {
+            messages.map(({ content}, index) => (
+              <ListItem
+                key={index}
+                className=''
+              >
+                <ListItemText>
+                  { content }
+                </ListItemText>
+              </ListItem>
+            ))
+          }
+        </List>
         <aside
           className='fixed bottom-[0px] w-[60%] h-[70px] flex items-center border-[1px] border-slate-300 rounded-[8px] mb-[10px]'
         >
