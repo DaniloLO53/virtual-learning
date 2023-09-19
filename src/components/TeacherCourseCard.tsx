@@ -12,7 +12,6 @@ export interface TeacherCourseCardProps {
 
 export const TeacherCourseCard = ({ course }: TeacherCourseCardProps) => {
   const { title, code, id } = course;
-  const router = useRouter();
 
   return (
     <Link

@@ -2,8 +2,6 @@ import * as React from 'react';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import axios from 'axios';
-import { fetchData } from '@/services/fetchData';
 
 export default function BasicMenu({ children, id, callBack }: any) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -16,7 +14,7 @@ export default function BasicMenu({ children, id, callBack }: any) {
   };
 
   return (
-    <div>
+    <div className='flex items-center h-full'>
       <Button
         id="basic-button"
         aria-controls={open ? 'basic-menu' : undefined}

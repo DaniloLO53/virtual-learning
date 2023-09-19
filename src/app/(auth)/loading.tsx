@@ -1,5 +1,3 @@
-import { Skeleton } from "@mui/material";
-
-export default function Loading() {
-  return <Skeleton />
+export default function AuthLoading() {
+  return <p>Loading...</p>
 }

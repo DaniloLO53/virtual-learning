@@ -2,6 +2,7 @@
 
 import { CourseTopBar } from '@/components/CourseTopBar';
 import * as React from 'react';
+import AnchorLoading from './loading';
 
 interface CourseLayoutProps {
   children: React.ReactNode,
@@ -14,7 +15,7 @@ export default function CourseLayout({ children, params }: CourseLayoutProps) {
   return (
     <React.Fragment>
       <CourseTopBar courseId={ params.courseId } />
-      { children }
+      <React.Suspense fallback={<AnchorLoading />}>{children}</React.Suspense>
     </React.Fragment>
   )
 }
