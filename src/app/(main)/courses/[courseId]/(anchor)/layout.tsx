@@ -16,6 +16,7 @@ export default function CourseLayout({ children, params }: CourseLayoutProps) {
     <React.Fragment>
       <CourseTopBar courseId={ params.courseId } />
       <React.Suspense fallback={<AnchorLoading />}>{children}</React.Suspense>
+      { children }
     </React.Fragment>
   )
 }

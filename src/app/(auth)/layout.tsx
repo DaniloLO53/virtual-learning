@@ -1,7 +1,7 @@
 'use client'
 
 import { Suspense } from "react"
-import AuthLoading from "./loading"
+// import AuthLoading from "./loading"
 
 export default function AuthLayout({
   children,
@@ -14,7 +14,8 @@ export default function AuthLayout({
     >
       <div className='bg-gradient-to-r from-white to-transparent w-full min-h-screen flex items-center'>
         <div className='w-[50%] flex justify-center'>
-          <Suspense fallback={<AuthLoading />}>{children}</Suspense>
+          {/* <Suspense fallback={<AuthLoading />}>{children}</Suspense> */}
+          { children }
         </div>
       </div>
     </div>

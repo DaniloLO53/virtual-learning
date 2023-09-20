@@ -3,6 +3,8 @@
 import { Footer } from '@/components/Footer';
 import { TopBar } from '@/components/TopBar'
 import { usePathname } from 'next/navigation';
+import React from 'react';
+import MainLoading from './loading';
 
 export default function MainLayout({
   children,
@@ -12,8 +14,8 @@ export default function MainLayout({
   return (
     <>
       <TopBar />
-      { children }
-      {/* <Footer /> */}
+      <React.Suspense fallback={<MainLoading />}>{children}</React.Suspense>
+      {/* { children } */}
     </>
   )
 }

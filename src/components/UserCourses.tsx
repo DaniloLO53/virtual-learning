@@ -28,13 +28,15 @@ export const UserCourses = ({
   setDescription,
   handlePublishCourse
 }: UserCoursesProps) => {
-  const role = JSON.parse(localStorage.getItem('role') || 'null');
   const { userData } = useUserContext();
-
+  const { courses } = userData;
+  const role = JSON.parse((localStorage.getItem('role')) || 'null');
+  
   const coursesList = () => {
+    console.log('COURSES', courses)
+    console.log('role', role)
     if (role) {
-      console.log('COURSES', userData.courses)
-      return userData.courses.map((course: any) => (
+      return courses!.map((course: any) => (
         role === 'student'
         ? <StudentCourseCard course={course} key={course.id}/>
         : <TeacherCourseCard course={course} key={course.id}/>

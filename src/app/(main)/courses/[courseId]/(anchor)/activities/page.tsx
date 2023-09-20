@@ -32,7 +32,6 @@ export interface Actvity {
 
 export default function Activities({ params }: any) {
   const role = JSON.parse(localStorage.getItem('role') || '');
-  const [newActivity, setNewActivity] = React.useState<any>(null);
   const [activities, setActivities] = React.useState<Actvity[] | null>(null);
   const [open, setOpen] = React.useState(false);
   const [title, setTitle] = React.useState('');

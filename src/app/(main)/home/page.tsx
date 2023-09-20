@@ -11,11 +11,11 @@ export default function Home() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [code, setCode] = useState('');
-  const { setUserData } = useUserContext();
-  const role = JSON.parse(localStorage.getItem('role') || 'null');
+  const { setUserData, userData } = useUserContext();
 
+  
   async function loadUserCourses() {
-    const PATH = `/courses/${role === 'student' ? 'registered' : 'created'}`;
+    const PATH = `/courses/${userData.role === 'student' ? 'registered' : 'created'}`;
     const coursesFromApi = await fetchData({ url: PATH });
 
     setUserData((prevState: any) => ({ ...prevState, courses: coursesFromApi }));

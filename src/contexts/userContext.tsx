@@ -1,7 +1,7 @@
 "use client"
 
 import { SignUpData, SignInData, UserData } from '@/interfaces/user/UserData';
-import { createContext, ReactElement, useContext, useState } from 'react';
+import { createContext, ReactElement, useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { fetchData } from '@/services/fetchData';
@@ -27,16 +27,23 @@ export function useUserContext(): UserContext {
 }
 
 export function UserProvider({ children }: any): ReactElement {
+  // const role =  typeof window !== 'undefined' ? JSON.parse((localStorage.getItem('role')) || 'null') : null;
+  const role = JSON.parse((localStorage.getItem('role')) || 'null');
+  console.log('ROL', role)
   const [userData, setUserData] = useState<UserData>({
     id: 0,
     courses: [],
     email: '',
-    access_token: ''
+    first_name: '',
+    last_name: '',
+    access_token: '',
+    role,
+    gender: 'none'
   });
   const router = useRouter();
 
   async function signUpHandler(signUpData: SignUpData, role: Role) {
-    const PATH = '/auth/sign-up';
+    const PATH = '/sign-up';
     await axios({
       url: (process.env.NEXT_PUBLIC_SERVER_ENDPOINT as string) + PATH,
       method: 'post',
@@ -59,25 +66,52 @@ export function UserProvider({ children }: any): ReactElement {
       }
     })
 
-    localStorage.setItem('access_token', JSON.stringify(data.access_token));
-    localStorage.setItem('role', JSON.stringify(data.role));
-    setUserData({ ...userData, access_token: data.access_token });
+    typeof window !== 'undefined' && localStorage.setItem('access_token', JSON.stringify(data.access_token));
+    typeof window !== 'undefined' && localStorage.setItem('role', JSON.stringify(data.role));
+    // setUserData({ ...userData, access_token: data.access_token });
     router.push('/home');
   }
 
   async function signOutHandler() {
-    if (localStorage.getItem('access_token')) {
+    if (typeof window !== 'undefined' && localStorage.getItem('access_token')) {
       localStorage.removeItem('access_token');
       localStorage.removeItem('role');
       setUserData({
         id: 0,
         courses: [],
         email: '',
-        access_token: ''
+        first_name: '',
+        last_name: '',
+        access_token: '',
+        role: null,
+        gender: 'none'
       });
     }
     router.replace('/sign-in');
   }
+
+  async function loadUserInfos() {
+    const PATH = '/profile';
+
+    const userInfos = await fetchData({ url: PATH });
+    console.log('USERIFNOSSSS', userInfos)
+    setUserData((prevState) => ({
+      ...prevState,
+      first_name: userInfos.first_name || '',
+      last_name: userInfos.last_name || '',
+      email: userInfos.email || '',
+      profile_picture: userInfos.profilePictureFile,
+      courses: userInfos.courses,
+      registrations: userInfos.registrations,
+      gender: userInfos.gender,
+      role,
+    }))
+    console.log('userInfos', userInfos);
+  }
+
+  useEffect(() => {
+    role && loadUserInfos();
+  }, []);
 
   return (
     <UserContext.Provider value={{

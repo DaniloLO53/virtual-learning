@@ -5,6 +5,7 @@ import CourseTopBarAnchor from './CourseTopBarAnchor';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import BasicMenu from './BasicMenu';
 import { fetchData } from '@/services/fetchData';
+import { useUserContext } from '@/contexts/userContext';
 
 type CurrentTab = 'board' | 'chat' | 'activities' | 'participants' | 'groups';
 
@@ -13,7 +14,8 @@ export const CourseTopBar = ({ courseId }: { courseId: string }) => {
   const anchor = pathName.split('/')[pathName.split('/').length - 1];
   const [currentTab, setCurrentTab] = React.useState<CurrentTab>(anchor as CurrentTab);
   const anchors = ['board', 'activities', 'participants', 'chat', 'groups'];
-  const role = JSON.parse(localStorage.getItem('role') || 'null');
+  const { userData } = useUserContext();
+  
   const router = useRouter();
 
   const removeCourse = async (id: string) => {
@@ -48,7 +50,7 @@ export const CourseTopBar = ({ courseId }: { courseId: string }) => {
         }
       </ul>
       {
-        role === 'teacher'
+        userData.role === 'teacher'
         &&
         <BasicMenu
           id={courseId}
