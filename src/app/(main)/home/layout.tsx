@@ -3,7 +3,7 @@
 import { useUserContext } from '@/contexts/userContext';
 import React from 'react';
 
-export default function ProfileLayout({
+export default function HomeLayout({
   children,
 }: {
   children: React.ReactNode
@@ -12,7 +12,7 @@ export default function ProfileLayout({
 
   return (
     <>
-      { userData.email && children }
+      { children }
     </>
   )
 }

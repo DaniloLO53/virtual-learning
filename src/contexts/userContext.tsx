@@ -14,6 +14,7 @@ interface UserContext {
   signInHandler: (SignInData: SignInData, role: Role) => any;
   signOutHandler: any;
   loadUserInfos: any;
+  loadUserCourses: any;
 }
 
 
@@ -40,6 +41,9 @@ export function UserProvider({ children }: any): ReactElement {
     gender: 'none'
   });
   const router = useRouter();
+
+  console.log('context')
+  console.log('role', role)
 
   async function signUpHandler(signUpData: SignUpData, role: Role) {
     const PATH = '/sign-up';
@@ -88,27 +92,38 @@ export function UserProvider({ children }: any): ReactElement {
     router.replace('/sign-in');
   }
 
+  async function loadUserCourses() {
+    const PATH = `/courses/${role === 'student' ? 'registered' : 'created'}`;
+    const coursesFromApi = await fetchData({ url: PATH });
+
+    setUserData((prevState: any) => ({ ...prevState, courses: coursesFromApi }));
+  }
+
   async function loadUserInfos() {
     const PATH = '/profile';
 
     const userInfos = await fetchData({ url: PATH });
-    console.log('userInfos', userInfos)
+
+    console.log('profilePictureFile from api', userInfos.profilePictureFile)
     setUserData((prevState) => ({
       ...prevState,
       first_name: userInfos.first_name || '',
       last_name: userInfos.last_name || '',
       email: userInfos.email,
       profile_picture: userInfos.profilePictureFile,
-      courses: userInfos.courses,
-      registrations: userInfos.registrations,
       gender: userInfos.gender || 'none',
       role,
     }))
   }
 
   useEffect(() => {
-    role && loadUserInfos();
-  }, []);
+    console.log('userContext useEffect')
+    console.log('role', role)
+    if (role) {
+      loadUserInfos();
+      loadUserCourses();
+    }
+  }, [role]);
 
   return (
     <UserContext.Provider value={{
@@ -117,7 +132,8 @@ export function UserProvider({ children }: any): ReactElement {
       signUpHandler,
       signInHandler,
       signOutHandler,
-      loadUserInfos
+      loadUserInfos,
+      loadUserCourses
     }}>
       {children}
     </UserContext.Provider>

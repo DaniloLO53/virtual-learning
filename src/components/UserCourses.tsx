@@ -1,9 +1,11 @@
-import { useUserContext } from "@/contexts/userContext";
-import { Box, Grid } from "@mui/material";
-import { StudentCourseCard } from "./StudentCourseCard";
-import { TeacherCourseCard } from "./TeacherCourseCard";
+import { useUserContext } from '@/contexts/userContext';
+import { Box, Grid } from '@mui/material';
+import { StudentCourseCard } from './StudentCourseCard';
+import { TeacherCourseCard } from './TeacherCourseCard';
 import AddIcon from '@mui/icons-material/Add';
-import NewCourseDialog from "./NewCourseDialog";
+import NewCourseDialog from './NewCourseDialog';
+import { fetchData } from '@/services/fetchData';
+import { useEffect, useState } from 'react';
 
 interface UserCoursesProps {
   open: boolean;
@@ -26,35 +28,41 @@ export const UserCourses = ({
   setTitle,
   description,
   setDescription,
-  handlePublishCourse
+  handlePublishCourse,
 }: UserCoursesProps) => {
-  const { userData } = useUserContext();
-  const { courses } = userData;
-  const role = JSON.parse((localStorage.getItem('role')) || 'null');
-  
-  const coursesList = () => {
-    console.log('COURSES', courses)
-    console.log('role', role)
-    if (role) {
-      return courses!.map((course: any) => (
-        role === 'student'
-        ? <StudentCourseCard course={course} key={course.id}/>
-        : <TeacherCourseCard course={course} key={course.id}/>
-      ))
-    }
+  const role = JSON.parse(localStorage.getItem('role') || 'null');
+  const [courses, setCourses] = useState([]);
+
+  async function loadUserCourses() {
+    const PATH = `/courses/${role === 'student' ? 'registered' : 'created'}`;
+    const coursesFromApi = await fetchData({ url: PATH });
+
+    setCourses(coursesFromApi);
   }
 
+  console.log('courses', courses);
+
+  const coursesList = () => {
+    console.log('role', role);
+    if (role) {
+      return courses!.map((course: any) =>
+        role === 'student' ? (
+          <StudentCourseCard course={course} key={course.id} />
+        ) : (
+          <TeacherCourseCard course={course} key={course.id} />
+        )
+      );
+    }
+  };
+
   const noCoursesComponentBuilder = () => {
-    const text = role === 'student'
-      ? "You're not assigned to any course yet"
-      : "You didn't create any course yet";
-  
-    return (
-      <p className='relative left-[50%] translate-x-[-50%]'>
-        { text }
-      </p>
-    )
-  }
+    const text =
+      role === 'student'
+        ? "You're not assigned to any course yet"
+        : "You didn't create any course yet";
+
+    return <p className="relative left-[50%] translate-x-[-50%]">{text}</p>;
+  };
 
   const handleClose = () => {
     setTitle('');
@@ -62,22 +70,24 @@ export const UserCourses = ({
     setCode('');
 
     setOpen(false);
-  }
+  };
+
+  useEffect(() => {
+    loadUserCourses();
+  }, [])
 
   return (
     <>
-      <Grid 
-        className='flex flex-wrap gap-x-[40px] gap-y-[65px] py-[20px] relative'
+      <Grid
+        className="flex flex-wrap gap-x-[40px] gap-y-[65px] py-[20px] relative"
         container
       >
-        {
-          !userData.courses || userData.courses.length === 0
+        {!courses || courses.length === 0
           ? noCoursesComponentBuilder()
-          : coursesList()
-        }
+          : coursesList()}
       </Grid>
-      { role === 'teacher' &&
-        <Box className='flex text-purple-500 hover:text-bold'>
+      {role === 'teacher' && (
+        <Box className="flex text-purple-500 hover:text-bold">
           <AddIcon />
           <button
             className="border-none bg-transparent"
@@ -87,7 +97,7 @@ export const UserCourses = ({
             Create new course
           </button>
         </Box>
-      }
+      )}
       <NewCourseDialog
         open={open}
         onClose={handleClose}
@@ -100,5 +110,5 @@ export const UserCourses = ({
         handlePublishCourse={handlePublishCourse}
       />
     </>
-  )
-}
+  );
+};

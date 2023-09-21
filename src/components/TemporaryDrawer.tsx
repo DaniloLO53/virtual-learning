@@ -25,8 +25,9 @@ export default function TemporaryDrawer() {
   const [value, setValue] = React.useState('');
   const [courses, setCourses] = React.useState([]);
   const { userData } = useUserContext();
+  const role = JSON.parse((localStorage.getItem('role')) || 'null');
 
-  const isStudent = userData.role === 'student';
+  const isStudent = role === 'student';
 
   const toggleDrawer =
     (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
@@ -80,7 +81,7 @@ export default function TemporaryDrawer() {
             </ListItemButton>
           </ListItem>
           <ListItem>
-            <Link href="profile">
+            <Link href="/profile">
               <ListItemButton onClick={() => setState(false)}>
                 <ListItemIcon>
                   <PersonIcon />

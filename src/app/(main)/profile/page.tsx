@@ -60,10 +60,8 @@ export default function ProfilePage() {
 
   const chooseProfilePicture = () => {
     if (selectedFile) return selectedFile.fileimage;
-    return (
-      `data:image/png;base64,${userData.profile_picture?.string}` ??
-      '/default_profile.png'
-    );
+    if (userData.profile_picture) return `data:image/png;base64,${userData.profile_picture.string}`;
+    return '/default_profile.png';
   };
 
   async function handleSaveEdit() {
