@@ -13,7 +13,6 @@ import {
 } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import * as React from 'react';
-import uniqid from 'uniqid';
 
 export type FileUploadProps = {
   selectedFile: any;
@@ -21,29 +20,14 @@ export type FileUploadProps = {
 };
 
 export default function ProfilePage() {
-  const { userData } = useUserContext();
-
-  console.log('EMAIL', userData.email)
+  const { userData, loadUserInfos } = useUserContext();
 
   const [email, setEmail] = React.useState(userData.email);
-  const [firstName, setFirstName] = React.useState('');
-  const [lastName, setLastName] = React.useState('');
-  const [gender, setGender] = React.useState('');
+  const [firstName, setFirstName] = React.useState<any>(userData.first_name);
+  const [lastName, setLastName] = React.useState<any>(userData.last_name);
+  const [gender, setGender] = React.useState(userData.gender);
   const [selectedFile, setSelectedFile] = React.useState<any>(null);
   const router = useRouter();
-
-  async function loadUserInfos() {
-    const PATH = '/profile';
-
-    const userInfos = await fetchData({ url: PATH });
-
-    // setEmail(userInfos.email);
-    // setFirstName(userInfos.first_name);
-    // setLastName(userInfos.last_name);
-    // setGender(userInfos.gender);
-
-    console.log('userInfos', userInfos);
-  }
 
   const filesizes = (bytes: any, decimals = 2) => {
     if (bytes === 0) return '0 Bytes';
@@ -121,12 +105,10 @@ export default function ProfilePage() {
       payload: selectedFile ? payloadWithPicture : payload,
     });
 
+    await loadUserInfos();
+
     router.replace('/home');
   }
-
-  React.useEffect(() => {
-    // loadUserInfos();
-  }, [])
 
   return (
     <div className="my-[100px] w-[100vw] flex justify-center">

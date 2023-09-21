@@ -13,6 +13,7 @@ interface UserContext {
   signUpHandler: any;
   signInHandler: (SignInData: SignInData, role: Role) => any;
   signOutHandler: any;
+  loadUserInfos: any;
 }
 
 
@@ -27,9 +28,7 @@ export function useUserContext(): UserContext {
 }
 
 export function UserProvider({ children }: any): ReactElement {
-  // const role =  typeof window !== 'undefined' ? JSON.parse((localStorage.getItem('role')) || 'null') : null;
   const role = JSON.parse((localStorage.getItem('role')) || 'null');
-  console.log('ROL', role)
   const [userData, setUserData] = useState<UserData>({
     id: 0,
     courses: [],
@@ -68,7 +67,6 @@ export function UserProvider({ children }: any): ReactElement {
 
     typeof window !== 'undefined' && localStorage.setItem('access_token', JSON.stringify(data.access_token));
     typeof window !== 'undefined' && localStorage.setItem('role', JSON.stringify(data.role));
-    // setUserData({ ...userData, access_token: data.access_token });
     router.push('/home');
   }
 
@@ -94,19 +92,18 @@ export function UserProvider({ children }: any): ReactElement {
     const PATH = '/profile';
 
     const userInfos = await fetchData({ url: PATH });
-    console.log('USERIFNOSSSS', userInfos)
+    console.log('userInfos', userInfos)
     setUserData((prevState) => ({
       ...prevState,
       first_name: userInfos.first_name || '',
       last_name: userInfos.last_name || '',
-      email: userInfos.email || '',
+      email: userInfos.email,
       profile_picture: userInfos.profilePictureFile,
       courses: userInfos.courses,
       registrations: userInfos.registrations,
-      gender: userInfos.gender,
+      gender: userInfos.gender || 'none',
       role,
     }))
-    console.log('userInfos', userInfos);
   }
 
   useEffect(() => {
@@ -119,7 +116,8 @@ export function UserProvider({ children }: any): ReactElement {
       userData,
       signUpHandler,
       signInHandler,
-      signOutHandler
+      signOutHandler,
+      loadUserInfos
     }}>
       {children}
     </UserContext.Provider>
