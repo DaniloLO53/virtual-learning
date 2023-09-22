@@ -42,11 +42,12 @@ export function UserProvider({ children }: any): ReactElement {
   });
   const router = useRouter();
 
-  console.log('context')
-  console.log('role', role)
+  // console.log('context')
+  // console.log('role', role)
 
   async function signUpHandler(signUpData: SignUpData, role: Role) {
     const PATH = '/sign-up';
+
     await axios({
       url: (process.env.NEXT_PUBLIC_SERVER_ENDPOINT as string) + PATH,
       method: 'post',
@@ -71,6 +72,8 @@ export function UserProvider({ children }: any): ReactElement {
 
     typeof window !== 'undefined' && localStorage.setItem('access_token', JSON.stringify(data.access_token));
     typeof window !== 'undefined' && localStorage.setItem('role', JSON.stringify(data.role));
+
+    loadUserInfos();
     router.push('/home');
   }
 
@@ -78,13 +81,7 @@ export function UserProvider({ children }: any): ReactElement {
     if (typeof window !== 'undefined' && localStorage.getItem('access_token')) {
       localStorage.removeItem('access_token');
       localStorage.removeItem('role');
-      setUserData({
-        id: 0,
-        courses: [],
-        email: '',
-        first_name: '',
-        last_name: '',
-        access_token: '',
+      setUserData({ id: 0, courses: [], email: '', first_name: '', last_name: '', access_token: '',
         role: null,
         gender: 'none'
       });
@@ -101,10 +98,8 @@ export function UserProvider({ children }: any): ReactElement {
 
   async function loadUserInfos() {
     const PATH = '/profile';
-
     const userInfos = await fetchData({ url: PATH });
 
-    console.log('profilePictureFile from api', userInfos.profilePictureFile)
     setUserData((prevState) => ({
       ...prevState,
       first_name: userInfos.first_name || '',
@@ -117,13 +112,13 @@ export function UserProvider({ children }: any): ReactElement {
   }
 
   useEffect(() => {
-    console.log('userContext useEffect')
-    console.log('role', role)
+    // console.log('userContext useEffect')
+    // console.log('role', role)
     if (role) {
       loadUserInfos();
       loadUserCourses();
     }
-  }, [role]);
+  }, []);
 
   return (
     <UserContext.Provider value={{

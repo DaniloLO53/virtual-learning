@@ -40,10 +40,7 @@ export const UserCourses = ({
     setCourses(coursesFromApi);
   }
 
-  console.log('courses', courses);
-
   const coursesList = () => {
-    console.log('role', role);
     if (role) {
       return courses!.map((course: any) =>
         role === 'student' ? (
@@ -74,7 +71,7 @@ export const UserCourses = ({
 
   useEffect(() => {
     loadUserCourses();
-  }, [])
+  }, []);
 
   return (
     <>
