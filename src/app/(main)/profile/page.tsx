@@ -22,10 +22,10 @@ export type FileUploadProps = {
 export default function ProfilePage() {
   const { userData, loadUserInfos } = useUserContext();
 
-  const [email, setEmail] = React.useState(userData.email);
-  const [firstName, setFirstName] = React.useState<any>(userData.first_name);
-  const [lastName, setLastName] = React.useState<any>(userData.last_name);
-  const [gender, setGender] = React.useState(userData.gender);
+  const [email, setEmail] = React.useState(userData!.email);
+  const [firstName, setFirstName] = React.useState<any>(userData!.first_name);
+  const [lastName, setLastName] = React.useState<any>(userData!.last_name);
+  const [gender, setGender] = React.useState(userData!.gender);
   const [selectedFile, setSelectedFile] = React.useState<any>(null);
   const router = useRouter();
 
@@ -60,7 +60,7 @@ export default function ProfilePage() {
 
   const chooseProfilePicture = () => {
     if (selectedFile) return selectedFile.fileimage;
-    if (userData.profile_picture) return `data:image/png;base64,${userData.profile_picture.string}`;
+    if (userData!.profile_picture) return `data:image/png;base64,${userData!.profile_picture.string}`;
     return '/default_profile.png';
   };
 
@@ -83,7 +83,7 @@ export default function ProfilePage() {
         ...payload,
         profilePicture: {
           raw: formData,
-          id: userData.profile_picture?.id,
+          id: userData!.profile_picture?.id,
           size: selectedFile.filesize,
           title: selectedFile.filename,
           type: selectedFile.filetype,

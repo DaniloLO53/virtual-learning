@@ -1,4 +1,5 @@
-import { useUserContext } from '@/contexts/userContext';
+import { useAuthContext } from '@/contexts/authContext';
+import { Roles } from '@/services/verifyAuth';
 import { FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation';
@@ -10,7 +11,7 @@ export const SignUpForm = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [email, setEmail] = useState('');
   const [role, setRole] = useState('student');
-  const { signUpHandler } = useUserContext();
+  const { signUpHandler } = useAuthContext();
   const router = useRouter();
   const formIsValid = password.length > 0
     && email.length > 0
@@ -78,11 +79,11 @@ export const SignUpForm = () => {
   return (
     <div
       className='bg-white opacity-80 pb-[36px] px-[24px] border-solid border-[1px] rounded-md
-      border-slater-200 flex flex-col itens-center'
+      border-slater-200 flex flex-col itens-center gap-y-[20px]'
     >
       <Image
         src='/logo.svg'
-        alt='Vercel Logo'
+        alt='Learnus Logo'
         className='m-[45px]'
         width={350}
         height={100}
@@ -151,7 +152,7 @@ export const SignUpForm = () => {
         </FormControl>
         <Button
           type='button'
-          onClick={() => signUpHandler({ email, password, confirmPassword }, role)}
+          onClick={() => signUpHandler({ email, password, confirmPassword }, role as Roles)}
           disabled={!formIsValid}
           variant={!formIsValid ? 'transparent' : 'default'}
         >

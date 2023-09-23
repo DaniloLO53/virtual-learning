@@ -1,12 +1,14 @@
-import './globals.css'
+import './globals.css';
 // import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
-import { UserProvider } from '@/contexts/userContext'
-import { WebSocketProvider } from '@/contexts/webSocketContext'
-import React from 'react'
-import RootLoading from './loading'
+import { Inter } from 'next/font/google';
+import { UserProvider } from '@/contexts/userContext';
+import { WebSocketProvider } from '@/contexts/webSocketContext';
+import React from 'react';
+import RootLoading from './loading';
+import { AuthProvider } from '@/contexts/authContext';
+import { CoursesProvider } from '@/contexts/coursesContext';
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ['latin'] });
 
 // export const metadata: Metadata = {
 //   title: 'Create Next App',
@@ -16,21 +18,23 @@ const inter = Inter({ subsets: ['latin'] })
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
-    <html lang='en'>
+    <html lang="en">
       <body className={inter.className}>
-        <WebSocketProvider>
-          <UserProvider>
-            <React.Suspense
-              fallback={<RootLoading />}
-            >
-              {children}
-            </React.Suspense>
-          </UserProvider>
-        </WebSocketProvider>
+        <AuthProvider>
+          <WebSocketProvider>
+            <UserProvider>
+              <CoursesProvider>
+                <React.Suspense fallback={<RootLoading />}>
+                  {children}
+                </React.Suspense>
+              </CoursesProvider>
+            </UserProvider>
+          </WebSocketProvider>
+        </AuthProvider>
       </body>
     </html>
-  )
+  );
 }

@@ -12,7 +12,7 @@ export default function ProfileLayout({
 
   return (
     <>
-      { userData.email && children }
+      { userData && children }
     </>
   )
 }

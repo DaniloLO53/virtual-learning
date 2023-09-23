@@ -18,13 +18,16 @@ import {
 } from '@mui/material';
 import StaticIcon, { IconNames } from './StaticIcon';
 import PersonIcon from '@mui/icons-material/Person';
+import { useAuthContext } from '@/contexts/authContext';
+import { useCoursesContext } from '@/contexts/coursesContext';
 
 export default function TemporaryDrawer() {
-  const { signOutHandler } = useUserContext();
+  const { signOutHandler } = useAuthContext();
   const [state, setState] = React.useState(false);
   const [value, setValue] = React.useState('');
   const [courses, setCourses] = React.useState([]);
-  const { userData } = useUserContext();
+  const { userData, setUserData } = useUserContext();
+  const { courses: contextCourses, setCourses: contextSetCourses } = useCoursesContext();
   const role = JSON.parse((localStorage.getItem('role')) || 'null');
 
   const isStudent = role === 'student';
@@ -70,10 +73,10 @@ export default function TemporaryDrawer() {
         )}
         <List>
           <ListItem>
-            <ListItemText primary={`${userData.first_name}`} />
+            <ListItemText primary={`${userData?.first_name}`} />
           </ListItem>
           <ListItem>
-            <ListItemButton onClick={signOutHandler}>
+            <ListItemButton onClick={() => signOutHandler({setUserData, setCourses: contextSetCourses})}>
               <ListItemIcon>
                 <LogoutIcon />
               </ListItemIcon>

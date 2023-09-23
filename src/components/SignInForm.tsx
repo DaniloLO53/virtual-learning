@@ -1,4 +1,4 @@
-import { useUserContext } from '@/contexts/userContext';
+import { useAuthContext } from '@/contexts/authContext';
 import {
   FormControl,
   InputLabel,
@@ -17,14 +17,14 @@ export const SignInForm = () => {
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
   const [role, setRole] = useState<Role>('student');
-  const { signInHandler } = useUserContext();
+  const { signInHandler } = useAuthContext();
   const router = useRouter();
   const formIsValid = password.length > 0 && email.length > 0;
 
   return (
     <div
       className="bg-white opacity-80 pb-[36px] px-[24px] border-solid border-[1px] rounded-md
-      border-slater-200 flex flex-col itens-center"
+      border-slater-200 flex flex-col itens-center gap-y-[20px]"
     >
       <Image
         src="/logo.svg"

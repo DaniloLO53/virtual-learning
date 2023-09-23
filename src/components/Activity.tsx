@@ -2,9 +2,7 @@
 
 import Link from 'next/link';
 import * as React from 'react';
-import AddIcon from '@mui/icons-material/Add';
-import Section from './Section';
-import { Box, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import MuiAccordion, { AccordionProps } from '@mui/material/Accordion';
 import MuiAccordionSummary, { AccordionSummaryProps } from '@mui/material/AccordionSummary';
 import MuiAccordionDetails from '@mui/material/AccordionDetails';
@@ -13,9 +11,6 @@ import { styled } from '@mui/material/styles';
 import ArrowForwardIosSharpIcon from '@mui/icons-material/ArrowForwardIosSharp';
 import { fetchData } from '@/services/fetchData';
 import Image from 'next/image';
-import { Blob, File } from 'buffer';
-import Canvas from './Canvas';
-import axios from 'axios';
 import { useUserContext } from '@/contexts/userContext';
 
 
@@ -85,6 +80,7 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
 export const Activity: React.FC<ActivityProps> =({ activity, handleChange, expanded, handleRemoveActivity }: ActivityProps) => {
   const [fileStringArray, setFileStringArray] = React.useState<string[]>([]);
   const { userData } = useUserContext();
+  const role = JSON.parse(localStorage.getItem('role') || 'null');
 
   async function loadFilesActivity() {
     const REQUEST_PATH = '/files/activities/' + `${activity.uuid}`;
@@ -186,7 +182,7 @@ export const Activity: React.FC<ActivityProps> =({ activity, handleChange, expan
               >
                 <Link
                   href={
-                    `/courses/${activity.course_id}/activities/${activity.id}/${userData.role === 'student' ? 'details' : 'submits'}`
+                    `/courses/${activity.course_id}/activities/${activity.id}/${role === 'student' ? 'details' : 'submits'}`
                   }
                   className='text-purple-400 font-semibold hover:font-bold'
                 >

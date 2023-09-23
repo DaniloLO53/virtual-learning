@@ -1,38 +1,32 @@
-'use client'
+'use client';
 
+import { TeacherCourse } from '@/interfaces/user/UserData';
 import { Box, Grid, Typography } from '@mui/material';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import * as React from 'react';
-import { Course } from './StudentCourseCard';
+import { CourseCard } from './CourseCard';
 
 export interface TeacherCourseCardProps {
-  course: Course
+  course: TeacherCourse;
 }
 
 export const TeacherCourseCard = ({ course }: TeacherCourseCardProps) => {
-  const { title, code, id } = course;
+  const { title, id, teacher, activities } = course;
+
+  console.log('course', course);
 
   return (
-    <Link
-      className='p-[15px]'
-      href={`/courses/${id}/board`}
+    <CourseCard
+      title={title}
+      id={id}
+      email={teacher.email}
+      first_name={teacher.first_name}
+      last_name={teacher.last_name}
     >
-      <Grid
-        className='w-[310px] h-[280px] border-slate-300 border-[1px] rounded-t-[35px] rounded-b-[10px]'
-      >
-        <Box
-          className='rounded-t-[35px] h-[25%] py-[8px] pl-[25px] border-b-slate-300
-          border-b-[1px] flex flex-col justify-between'
-        >
-          <Typography className='w-full text-[20px] truncate text-left'>
-            { title }
-          </Typography>
-          <Typography className='text-[12px]'>
-            { code }
-          </Typography>
+      {activities.map(({ _count }, index) => (
+        <Box key={index} className="flex flex-col items-start p-[14px]">
+          <Typography>Activities done: {_count.activities_done}</Typography>
         </Box>
-      </Grid>
-    </Link>
-  )
-}
+      ))}
+    </CourseCard>
+  );
+};

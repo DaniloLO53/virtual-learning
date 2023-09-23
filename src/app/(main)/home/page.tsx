@@ -1,49 +1,55 @@
-'use client'
+'use client';
 
 import { UserCourses } from '@/components/UserCourses';
-import { useUserContext } from '@/contexts/userContext';
+import { Courses, useCoursesContext } from '@/contexts/coursesContext';
 import { fetchData } from '@/services/fetchData';
 import { Container } from '@mui/material';
 import React, { useState } from 'react';
 
+export interface NewCourseInfos {
+  title: string;
+  description: string;
+  code: string;
+}
+
 export default function Home() {
-  const [open, setOpen] = useState(false);
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [code, setCode] = useState('');
-  const { setUserData } = useUserContext();
+  const [open, setOpen] = useState<boolean>(false);
+  const [newCourseInfos, setNewCourseInfos] = useState<NewCourseInfos | null>(
+    null
+  );
+  const { setCourses } = useCoursesContext();
 
   const handlePublishCourse = async () => {
     setOpen(false);
 
-    const PATH = '/courses';
+    if (newCourseInfos) {
+      const { title, description, code } = newCourseInfos;
 
-    const publishedCourse = await fetchData({
-      url: PATH,
-      method: 'post',
-      payload: {
-        title,
-        description,
-        code,
-      }
-    })
+      const PATH = '/courses';
 
-    setUserData((prevState: any) => ({ ...prevState, courses: [...prevState.courses, publishedCourse] }));
-  }
+      const publishedCourse = await fetchData({
+        url: PATH,
+        method: 'post',
+        payload: {
+          title,
+          description,
+          code,
+        },
+      });
+
+      setCourses((prevState: Courses) => ([ ...prevState, publishedCourse ]));
+    }
+  };
 
   return (
-    <Container className='pt-topBar'>
+    <Container className="pt-topBar">
       <UserCourses
         handlePublishCourse={handlePublishCourse}
-        code={code}
-        setCode={setCode}
-        description={description}
-        setDescription={setDescription}
-        title={title}
-        setTitle={setTitle}
+        newCourseInfos={newCourseInfos}
+        setNewCourseInfos={setNewCourseInfos}
         open={open}
         setOpen={setOpen}
       />
     </Container>
-  )
+  );
 }

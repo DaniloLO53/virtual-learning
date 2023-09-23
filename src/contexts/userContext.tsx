@@ -1,22 +1,22 @@
-"use client"
+'use client';
 
-import { SignUpData, SignInData, UserData } from '@/interfaces/user/UserData';
-import { createContext, ReactElement, useContext, useEffect, useState } from 'react';
-import axios from 'axios';
-import { useRouter } from 'next/navigation';
+import { UserData } from '@/interfaces/user/UserData';
+import {
+  createContext,
+  ReactElement,
+  useContext,
+  useEffect,
+  useState,
+  ReactNode
+} from 'react';
 import { fetchData } from '@/services/fetchData';
+import { useAuthContext } from './authContext';
 
-type Role = 'student' | 'teacher';
 interface UserContext {
-  userData: UserData;
+  userData: UserData | null;
   setUserData: any;
-  signUpHandler: any;
-  signInHandler: (SignInData: SignInData, role: Role) => any;
-  signOutHandler: any;
-  loadUserInfos: any;
-  loadUserCourses: any;
+  loadUserInfos: () => Promise<void>;
 }
-
 
 const UserContext = createContext<UserContext | null>(null);
 
@@ -28,108 +28,39 @@ export function useUserContext(): UserContext {
   return context;
 }
 
-export function UserProvider({ children }: any): ReactElement {
-  const role = JSON.parse((localStorage.getItem('role')) || 'null');
-  const [userData, setUserData] = useState<UserData>({
-    id: 0,
-    courses: [],
-    email: '',
-    first_name: '',
-    last_name: '',
-    access_token: '',
-    role,
-    gender: 'none'
-  });
-  const router = useRouter();
-
-  // console.log('context')
-  // console.log('role', role)
-
-  async function signUpHandler(signUpData: SignUpData, role: Role) {
-    const PATH = '/sign-up';
-
-    await axios({
-      url: (process.env.NEXT_PUBLIC_SERVER_ENDPOINT as string) + PATH,
-      method: 'post',
-      data: signUpData,
-      headers: {
-        role,
-      }
-    })
-    router.push('/sign-in');
-  }
-
-  async function signInHandler(signInData: SignInData, role: Role) {
-    const PATH = '/auth/sign-in';
-    const { data } = await axios({
-      url: (process.env.NEXT_PUBLIC_SERVER_ENDPOINT as string) + PATH,
-      method: 'post',
-      data: signInData,
-      headers: {
-        role,
-      }
-    })
-
-    typeof window !== 'undefined' && localStorage.setItem('access_token', JSON.stringify(data.access_token));
-    typeof window !== 'undefined' && localStorage.setItem('role', JSON.stringify(data.role));
-
-    loadUserInfos();
-    router.push('/home');
-  }
-
-  async function signOutHandler() {
-    if (typeof window !== 'undefined' && localStorage.getItem('access_token')) {
-      localStorage.removeItem('access_token');
-      localStorage.removeItem('role');
-      setUserData({ id: 0, courses: [], email: '', first_name: '', last_name: '', access_token: '',
-        role: null,
-        gender: 'none'
-      });
-    }
-    router.replace('/sign-in');
-  }
-
-  async function loadUserCourses() {
-    const PATH = `/courses/${role === 'student' ? 'registered' : 'created'}`;
-    const coursesFromApi = await fetchData({ url: PATH });
-
-    setUserData((prevState: any) => ({ ...prevState, courses: coursesFromApi }));
-  }
+export function UserProvider({ children }: { children: ReactNode}): ReactElement {
+  const [userData, setUserData] = useState<UserData | null>(null);
+  const { userRole } = useAuthContext();
 
   async function loadUserInfos() {
     const PATH = '/profile';
-    const userInfos = await fetchData({ url: PATH });
+    const { id, first_name, last_name, email, profilePictureFile, gender } =
+      await fetchData({ url: PATH });
 
-    setUserData((prevState) => ({
-      ...prevState,
-      first_name: userInfos.first_name || '',
-      last_name: userInfos.last_name || '',
-      email: userInfos.email,
-      profile_picture: userInfos.profilePictureFile,
-      gender: userInfos.gender || 'none',
-      role,
-    }))
+    setUserData({
+      id,
+      first_name,
+      last_name,
+      email,
+      profile_picture: profilePictureFile,
+      gender: gender || 'none',
+    });
   }
 
   useEffect(() => {
-    // console.log('userContext useEffect')
-    // console.log('role', role)
-    if (role) {
+    if (userRole) {
       loadUserInfos();
-      loadUserCourses();
     }
-  }, []);
+  }, [userRole]);
 
   return (
-    <UserContext.Provider value={{
-      setUserData,
-      userData,
-      signUpHandler,
-      signInHandler,
-      signOutHandler,
-      loadUserInfos,
-      loadUserCourses
-    }}>
+    <UserContext.Provider
+      value={{
+        setUserData,
+        userData,
+        loadUserInfos,
+      }}
+    >
       {children}
     </UserContext.Provider>
   );
